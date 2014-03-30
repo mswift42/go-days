@@ -1,0 +1,21 @@
+body {
+    padding-top: 70px;
+    background-color:#efece3;
+    }
+
+.header {
+    width:50px;
+    margin:auto;
+    }
+
+.active {
+    padding-right:8px;
+    }
+.brand {
+    padding-right:4px;
+    }
+
+div.abouttext {
+    width:400px;
+    margin:auto;
+    }
