@@ -1,8 +1,7 @@
-<html>
   <head>
     <link href="/stylesheets/bootstrap.min.css" rel="stylesheet"/>
     <link href="/stylesheets/days.css" rel="stylesheet"/>
-    <title>{{.pagetitle}}
+    <title>{{.Pagetitle }}
     </title>
   </head>
   <body>
@@ -11,7 +10,7 @@
         <div class="container">
           <ul class="nav navbar-left">
             <li class="active navbar-left">
-              <a href="/index">Tasks</a>
+              <a href="/">Tasks</a>
             </li>
             <li class="active navbar-left">
               <a href="/newtask">New Task</a>
@@ -23,5 +22,6 @@
         </div>
       </div>
     </nav>
+    {{yield}}
   </body>
 </html>
