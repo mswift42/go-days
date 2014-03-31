@@ -1,23 +1,23 @@
 package days
 
 import (
+        "github.com/codegangsta/martini"
+        "github.com/martini-contrib/render"
         "html/template"
         "net/http"
 )
 
 func init() {
-        http.HandleFunc("/", root)
+        m := martini.Classic()
+        m.Use(render.Renderer(render.Options{Layout: "layout",
+                Directory: "templates"}))
+        m.Get("/", func(r render.Render) {
+                r.HTML(200, "home", map[string]interface{}{"Pagetitle": "Tasks"})
+        })
+        //      http.HandleFunc("/", root)
+        http.Handle("/", m)
         http.HandleFunc("/sign", sign)
 }
-
-func root(w http.ResponseWriter, r *http.Request) {
-        tm := make(map[string]interface{})
-        tm["pagetitle"] = "Index"
-        guestbookForm.Execute(w, tm)
-
-}
-
-var guestbookForm = template.Must(template.ParseFiles("templates/layout.tmpl"))
 
 func sign(w http.ResponseWriter, r *http.Request) {
         err := signTemplate.Execute(w, r.FormValue("content"))
