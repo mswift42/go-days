@@ -19,3 +19,7 @@ div.abouttext {
     width:400px;
     margin:auto;
     }
+
+div.form-group {
+    padding:12px;
+    }
