@@ -37,6 +37,24 @@ func home(w http.ResponseWriter, r *http.Request) {
                 http.Error(w, err.Error(), http.StatusInternalServerError)
         }
 }
+func newtask(w http.ResponseWriter, r *http.Request) {
+        newTmpl := template.Must(template.New("newtask").ParseFiles("templates/layout.tmpl", "templates/newtask.tmpl"))
+        newTmpl.Execute(w, map[string]interface{}{"Pagetitle": "New Task"})
+}
+
+func storetask(w http.ResponseWriter, r *http.Request) {
+        c := appengine.NewContext(r)
+        t := Task{Summary: r.FormValue("summary"),
+                Content:   r.FormValue("content"),
+                Scheduled: time.Now()}
+        key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
+        _, err := datastore.Put(c, key, &t)
+        if err != nil {
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+                return
+        }
+        http.Redirect(w, r, "/", http.StatusFound)
+}
 
 func about(w http.ResponseWriter, r *http.Request) {
         tmpl := template.Must(template.New("about").ParseFiles("templates/layout.tmpl", "templates/about.tmpl"))
@@ -46,4 +64,6 @@ func about(w http.ResponseWriter, r *http.Request) {
 func init() {
         http.HandleFunc("/", home)
         http.HandleFunc("/about", about)
+        http.HandleFunc("/storetask", storetask)
+        http.HandleFunc("/newtask", newtask)
 }
