@@ -1,18 +1,18 @@
+{{define "newtask"}}
+{{template "base" .}}
 <div class="header">
   <h2 class="header">New Task</h2>
   <br/>
   <br/>
-  <form class="form-horizontal" method="post" action="/">
+  <form class="form-horizontal" method="post" action="/storetask">
     <fieldset>
       <div class="form-group">
         <label class="col-md-4 control-label" for="textinput">Task Summary</label>  
         <div class="col-md-4">
           <input id="textinput" name="tinput" class="form-control input-md" type="text">
         </div>
-
-
         <label class="col-md-4 control-label" for="tarea">Task Contents</label>
-        <div class="col-md-4">                     
+        <div class="col-md-4">
           <textarea class="form-control" id="textarea" name="textarea"></textarea>
         </div>
         <div class="form-group">
@@ -21,7 +21,6 @@
       </div>
     </fieldset>
   </form>
-
 </div>
-
+{{end}}
 
