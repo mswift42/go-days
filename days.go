@@ -22,18 +22,16 @@ func tasklistkey(c appengine.Context) *datastore.Key {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-        // home := make(map[string]*template.Template)
-        // homeTmpl["home.tmpl"]
         homeTmpl := template.Must(template.New("home").ParseFiles("templates/home.tmpl", "templates/layout.tmpl"))
         c := appengine.NewContext(r)
-        q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("-Date")
+        q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("-Scheduled").Limit(10)
         tasks := make([]Task, 0, 10)
         if _, err := q.GetAll(c, &tasks); err != nil {
                 http.Error(w, err.Error(), http.StatusInternalServerError)
                 return
         }
         if err := homeTmpl.Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
-                "Tasks": tasks}); err != nil {
+                "tasks": tasks}); err != nil {
                 http.Error(w, err.Error(), http.StatusInternalServerError)
         }
 }
@@ -44,8 +42,8 @@ func newtask(w http.ResponseWriter, r *http.Request) {
 
 func storetask(w http.ResponseWriter, r *http.Request) {
         c := appengine.NewContext(r)
-        t := Task{Summary: r.FormValue("summary"),
-                Content:   r.FormValue("content"),
+        t := Task{Summary: r.FormValue("tinput"),
+                Content:   r.FormValue("tarea"),
                 Scheduled: time.Now()}
         key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
         _, err := datastore.Put(c, key, &t)
