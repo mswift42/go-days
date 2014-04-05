@@ -6,6 +6,7 @@ body {
 .header {
     width:300px;
     margin:auto;
+    text-align:center;
     }
 
 .active {
@@ -22,4 +23,10 @@ div.abouttext {
 
 div.form-group {
     padding:12px;
+    }
+
+div.content {
+    padding:12px;
+    width:300px;
+    margin:auto;
     }
