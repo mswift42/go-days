@@ -1,13 +1,17 @@
 {{define "home"}}
 {{template "base" .}}
-<div class="header">
+<div class="container">
 <h2 class="header">Tasks</h2>
-{{range .Tasks}}
-<h4 class="header">{{.Summary}}</h4>
-<p>{{.Content}}</p>
 <br/>
+<br/>
+{{range .tasks}}
+<h4 class="header">{{ .Summary}}</h4>
+<div class="content">
+<pre>{{.Content}}</pre>
 <p>{{.Scheduled}}
 </p>
+</div>
+<br/>
 {{end}}
 </div>
 {{end}}
