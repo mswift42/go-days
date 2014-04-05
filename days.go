@@ -11,7 +11,7 @@ import (
 type Task struct {
         Summary   string
         Content   string
-        Scheduled time.Time
+        Scheduled string
         Done      bool
 }
 
@@ -37,14 +37,16 @@ func home(w http.ResponseWriter, r *http.Request) {
 }
 func newtask(w http.ResponseWriter, r *http.Request) {
         newTmpl := template.Must(template.New("newtask").ParseFiles("templates/layout.tmpl", "templates/newtask.tmpl"))
-        newTmpl.Execute(w, map[string]interface{}{"Pagetitle": "New Task"})
+        if err := newTmpl.Execute(w, map[string]interface{}{"Pagetitle": "New Task"}); err != nil {
+                http.Error(w, err.Error(), http.StatusInternalServerError)
+        }
 }
 
 func storetask(w http.ResponseWriter, r *http.Request) {
         c := appengine.NewContext(r)
         t := Task{Summary: r.FormValue("tinput"),
                 Content:   r.FormValue("tarea"),
-                Scheduled: time.Now()}
+                Scheduled: time.Now().Format(time.RFC822)}
         key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
         _, err := datastore.Put(c, key, &t)
         if err != nil {
