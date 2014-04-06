@@ -5,7 +5,6 @@ import (
 	"appengine/datastore"
 	"html/template"
 	"net/http"
-	//	"time"
 )
 
 // Task - struct for datastore table.
@@ -26,7 +25,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	homeTmpl := template.Must(template.New("home").ParseFiles("templates/home.tmpl",
 		"templates/layout.tmpl"))
 	c := appengine.NewContext(r)
-	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("-Scheduled").Limit(10)
+	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
 	if _, err := q.GetAll(c, &tasks); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
