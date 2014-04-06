@@ -1,10 +1,13 @@
 body {
     padding-top: 70px;
     background-color:#efece3;
-    }
+}
+
+div.container {
+    width:80em;
+}
 
 .header {
-    width:300px;
     margin:auto;
     text-align:center;
     }
@@ -27,6 +30,9 @@ div.form-group {
 
 div.content {
     padding:12px;
-    width:300px;
+    width:38em;
     margin:auto;
-    }
+}
+div.taskinline {
+    padding:8px;
+}
