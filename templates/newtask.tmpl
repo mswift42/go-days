@@ -1,31 +1,41 @@
 {{define "newtask"}}
 {{template "base" .}}
-<div class="header">
+<div class="container">
   <h2 class="header">New Task</h2>
   <br/>
   <br/>
+
   <form class="form-horizontal" method="post" action="/storetask">
     <fieldset>
-      <div class="form-group">
-        <label class="col-md-4 control-label" for="textinput">Task Summary</label>  
-        <div class="col-md-4">
-          <input id="textinput" name="tinput" class="form-control input-md" type="text">
+      <div class="content">
+        <div class="control-group">
+          <label class="control-label" for="textinput">Task Summary</label>
+          <div class="controls">
+            <input id="textinput" name="tinput" class="form-control input-md" type="text">
+          </div>
         </div>
-        <label class="col-md-4 control-label" for="tarea">Task Contents</label>
-        <div class="col-md-4">
-          <textarea class="form-control" name="tarea"></textarea>
+        <div class="control-group">
+          <label class="control-label" for="tarea">Task Contents</label>
+          <div class="controls">
+            <textarea class="form-control" name="tarea" rows="5"></textarea>
+          </div>
         </div>
-        <label for="scheduled" class="col-md-4 control-label">Scheduled</label>
-        <div class="col-md-4">
-          <input type="text" id="datepicker" name="scheduled" class="form-control input-md"
-                 value="pick a date"/>
+        <div class="control-group">
+          <label for="scheduled" class="col-md-4 control-label">Scheduled</label>
+          <div class="controls">
+            <input type="text" id="datepicker" name="scheduled" value="pick a date"/>
+          </div>
         </div>
-        <div class="form-group">
-          <button id="singlebutton" name="submitbutton" class="btn btn-primary">Submit</button>
+        <div class="control-group">
+          <div class="controls">
+            <button id="singlebutton" name="submitbutton" class="btn">Submit</button>
+          </div>
         </div>
       </div>
-    </fieldset>
-  </form>
+</div>
+</fieldset>
+</form>
+</div>
 </div>
 {{end}}
 
