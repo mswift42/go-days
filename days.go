@@ -5,6 +5,7 @@ import (
 	"appengine/datastore"
 	"html/template"
 	"net/http"
+	"time"
 )
 
 // Task - struct for datastore table.
@@ -15,6 +16,7 @@ type Task struct {
 	Content   string
 	Scheduled string
 	Done      bool
+	ID        int64
 }
 
 func tasklistkey(c appengine.Context) *datastore.Key {
@@ -48,7 +50,9 @@ func storetask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	t := Task{Summary: r.FormValue("tinput"),
 		Content:   r.FormValue("tarea"),
-		Scheduled: r.FormValue("scheduled")}
+		Scheduled: r.FormValue("scheduled"),
+		Done:      false,
+		ID:        time.Now().Unix()}
 	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
 	_, err := datastore.Put(c, key, &t)
 	if err != nil {
