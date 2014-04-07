@@ -6,12 +6,17 @@
 <br/>
 {{range .tasks}}
 <div class="content">
-
-  <h4 class="header">{{ .Summary}}</h4>
+    <h4 class="header">{{ .Summary}}</h4>
 <div class="taskinline">
 <pre>{{.Content}}</pre>
 <p>{{.Scheduled}}
 </p>
+<form action="/edittask" method="post">
+  <input type="hidden" name={{.ID}} value=""/>
+  <div class="taskinline">
+    <input type="submit"  value="Edit" class="btn"/>
+  </div>
+</form>
 </div>
 </div>
 <br/>

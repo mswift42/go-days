@@ -1,16 +1,17 @@
 {{define "base"}}
+<!doctype HTML>
 <head>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" />
-  <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script>
-  <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+  <!-- <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" /> -->
+  <!-- <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
+  <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"> -->
   <script src="/stylesheets/bootstrap-datepicker.js"></script>
-  <script>$(function() {
-    $("#datepicker").datepicker();
-  });
-  </script>
-  <link href="/stylesheets/bootstrap.min.css" rel="stylesheet"/>
-  <link href="/stylesheets/days.css" rel="stylesheet"/>
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet"/>
+    <link href="/stylesheets/days.css" rel="stylesheet"/>
+    <script>
+      $(function(){$("#datepicker").datepicker();});
+    </script>
+  <link href="/stylesheets/datepicker.css" rel="stylesheet"/>
   <title>{{.Pagetitle }}
   </title>
 </head>
@@ -28,7 +29,6 @@
           <li class="active navbar-left">
             <a href="/about">About</a>
           </li>
-
           <li class="active navbar-left">
             <a href="/signin">Sign in</a>
           </li>
