@@ -1,0 +1,16 @@
+{{define "edittask"}}
+{{template "base" .}}
+<div class="container">
+  <h2 class="header">Edit Tasks</h2>
+
+
+<form action="/updatetask" method="post">
+  <p>{{.Summary}}</p>
+  <textarea class="form-control" name="tarea" rows="5">{{.Content}}</textarea>
+  <input type="text" id="datepicker" value={{.Scheduled}} name="scheduled" />
+  <input type="hidden" value={{.Identifier}} name="taskid" />
+  <button class="btn" id="singlebutton" >Save</button>
+
+</form>
+</div>
+{{end}}
