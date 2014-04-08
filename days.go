@@ -83,9 +83,14 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
 	var task []Task
 	q.GetAll(c, &task)
+	//GetOrUpdate(c, content, scheduled)
 	task[0].Scheduled = scheduled
 	task[0].Content = content
-	datastore.Put(c, tasklistkey(c), &task[0])
+	_, err := datastore.Put(c, tasklistkey(c), &task)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
@@ -101,4 +106,18 @@ func init() {
 	http.HandleFunc("/storetask", storetask)
 	http.HandleFunc("/newtask", newtask)
 	http.HandleFunc("/edittask", edittask)
+	http.HandleFunc("/updatetask", updatetask)
+}
+func GetOrUpdate(c appengine.Context, content, scheduled string) error {
+	return datastore.RunInTransaction(c, func(c appengine.Context) error {
+		task := new(Task)
+		err := datastore.Get(c, tasklistkey(c), task)
+		if err != nil && err != datastore.ErrNoSuchEntity {
+			return err
+		}
+		task.Scheduled = scheduled
+		task.Content = content
+		_, err = datastore.Put(c, tasklistkey(c), &task)
+		return err
+	}, nil)
 }
