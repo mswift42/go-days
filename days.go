@@ -3,6 +3,7 @@ package days
 import (
 	"appengine"
 	"appengine/datastore"
+	"fmt"
 	"html/template"
 	"net/http"
 	"time"
@@ -12,11 +13,11 @@ import (
 // Contains a summary and the contents of a task, the scheduled
 // time for the task and whether it is done or not.
 type Task struct {
-	Summary   string
-	Content   string
-	Scheduled string
-	Done      bool
-	ID        int64
+	Summary    string
+	Content    string
+	Scheduled  string
+	Done       bool
+	Identifier string
 }
 
 func tasklistkey(c appengine.Context) *datastore.Key {
@@ -49,16 +50,42 @@ func newtask(w http.ResponseWriter, r *http.Request) {
 func storetask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	t := Task{Summary: r.FormValue("tinput"),
-		Content:   r.FormValue("tarea"),
-		Scheduled: r.FormValue("scheduled"),
-		Done:      false,
-		ID:        time.Now().Unix()}
+		Content:    r.FormValue("tarea"),
+		Scheduled:  r.FormValue("scheduled"),
+		Done:       false,
+		Identifier: fmt.Sprintf("%d", time.Now().Unix())}
 	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
 	_, err := datastore.Put(c, key, &t)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	http.Redirect(w, r, "/", http.StatusFound)
+}
+func edittask(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	id := r.FormValue("taskid")
+	var edittask []Task
+	q := datastore.NewQuery("Task").Filter("Identifier =", id)
+	q.GetAll(c, &edittask)
+	tmpl := template.Must(template.New("edittask").ParseFiles("templates/layout.tmpl",
+		"templates/edittask.tmpl"))
+	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks",
+		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
+		"Identifier": id, "Scheduled": edittask[0].Scheduled})
+}
+
+func updatetask(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	id := r.FormValue("taskid")
+	scheduled := r.FormValue("scheduled")
+	content := r.FormValue("tarea")
+	q := datastore.NewQuery("Task").Filter("Identifier =", id)
+	var task []Task
+	q.GetAll(c, &task)
+	task[0].Scheduled = scheduled
+	task[0].Content = content
+	datastore.Put(c, tasklistkey(c), &task[0])
 	http.Redirect(w, r, "/", http.StatusFound)
 }
 
@@ -73,4 +100,5 @@ func init() {
 	http.HandleFunc("/about", about)
 	http.HandleFunc("/storetask", storetask)
 	http.HandleFunc("/newtask", newtask)
+	http.HandleFunc("/edittask", edittask)
 }
