@@ -12,9 +12,9 @@
 <p>{{.Scheduled}}
 </p>
 <form action="/edittask" method="post">
-  <input type="hidden" name={{.ID}} value=""/>
+  <input type="hidden" value={{.Identifier}} name="taskid" />
   <div class="taskinline">
-    <input type="submit"  value="Edit" class="btn"/>
+    <input type="submit"  value="Edit Task" class="btn"/>
   </div>
 </form>
 </div>
