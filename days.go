@@ -81,12 +81,14 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	scheduled := r.FormValue("scheduled")
 	content := r.FormValue("tarea")
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
-	var task []Task
-	q.GetAll(c, &task)
+	var edittask []Task
+	q.GetAll(c, &edittask)
+	//	t, k := GetEntityAndKey(id, c)
 	//GetOrUpdate(c, content, scheduled)
-	task[0].Scheduled = scheduled
-	task[0].Content = content
-	_, err := datastore.Put(c, tasklistkey(c), &task)
+	edittask[0].Scheduled = scheduled
+	edittask[0].Content = content
+	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
+	_, err := datastore.Put(c, key, edittask[0])
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -99,6 +101,11 @@ func about(w http.ResponseWriter, r *http.Request) {
 		"templates/about.tmpl"))
 	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "About"})
 }
+func testGetAndEntity(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	t, _ := GetEntityAndKey("1396977797", c)
+	fmt.Fprintf(w, "%v", t)
+}
 
 func init() {
 	http.HandleFunc("/", home)
@@ -107,17 +114,34 @@ func init() {
 	http.HandleFunc("/newtask", newtask)
 	http.HandleFunc("/edittask", edittask)
 	http.HandleFunc("/updatetask", updatetask)
+	http.HandleFunc("/test", testGetAndEntity)
 }
-func GetOrUpdate(c appengine.Context, content, scheduled string) error {
-	return datastore.RunInTransaction(c, func(c appengine.Context) error {
-		task := new(Task)
-		err := datastore.Get(c, tasklistkey(c), task)
-		if err != nil && err != datastore.ErrNoSuchEntity {
-			return err
+
+// func GetOrUpdate(c appengine.Context,id,content, scheduled string) error {
+// 	return datastore.RunInTransaction(c, func(c appengine.Context) error {
+// 		task := new(Task)
+// 		err := datastore.Get(c, tasklistkey(c), task)
+// 		if err != nil && err != datastore.ErrNoSuchEntity {
+// 			return err
+// 		}
+// 		task.Scheduled = scheduled
+// 		task.Content = content
+// 		_, err = datastore.Put(c, tasklistkey(c), &task)
+// 		return err
+// 	}, nil)
+// }
+func GetEntityAndKey(id string, c appengine.Context) (task Task, k *datastore.Key) {
+	q := datastore.NewQuery("Task").Filter("Identifier =", id)
+	t := q.Run(c)
+	for {
+		var task Task
+		k, err := t.Next(&task)
+		if err == datastore.Done {
+			return task, k
 		}
-		task.Scheduled = scheduled
-		task.Content = content
-		_, err = datastore.Put(c, tasklistkey(c), &task)
-		return err
-	}, nil)
+		if err != nil {
+			c.Errorf("Fetching next Task :%v", err)
+
+		}
+	}
 }
