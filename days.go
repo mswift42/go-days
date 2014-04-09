@@ -67,13 +67,12 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("taskid")
 	var edittask []Task
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
-	key, _ := q.GetAll(c, &edittask)
-	intid := key[0].IntID()
+	q.GetAll(c, &edittask)
 	tmpl := template.Must(template.New("edittask").ParseFiles("templates/layout.tmpl",
 		"templates/edittask.tmpl"))
 	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks",
 		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
-		"Identifier": intid, "Scheduled": edittask[0].Scheduled})
+		"Identifier": id, "Scheduled": edittask[0].Scheduled})
 }
 
 func updatetask(w http.ResponseWriter, r *http.Request) {
@@ -83,15 +82,15 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	content := r.FormValue("tarea")
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
 	var edittask []Task
-	q.GetAll(c, &edittask)
-	//	t, k := GetEntityAndKey(id, c)
-	//GetOrUpdate(c, content, scheduled)
-	edittask[0].Scheduled = scheduled
-	edittask[0].Content = content
-	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
-	_, err := datastore.Put(c, key, edittask[0])
+	key, err := q.GetAll(c, &edittask)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
+	edittask[0].Scheduled = scheduled
+	edittask[0].Content = content
+	_, nerr := datastore.Put(c, key[0], &edittask[0])
+	if nerr != nil {
+		http.Error(w, nerr.Error(), http.StatusInternalServerError)
 		return
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
