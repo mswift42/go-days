@@ -21,14 +21,14 @@ type Task struct {
 }
 
 func tasklistkey(c appengine.Context) *datastore.Key {
-	return datastore.NewKey(c, "Task", "default_tasklist", 0, nil)
+	return datastore.NewKey(c, "Task", "", 0, nil)
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
 	homeTmpl := template.Must(template.New("home").ParseFiles("templates/home.tmpl",
 		"templates/layout.tmpl"))
 	c := appengine.NewContext(r)
-	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
+	q := datastore.NewQuery("Task").Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
 	if _, err := q.GetAll(c, &tasks); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -67,12 +67,13 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("taskid")
 	var edittask []Task
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
-	q.GetAll(c, &edittask)
+	key, _ := q.GetAll(c, &edittask)
+	intid := key[0].IntID()
 	tmpl := template.Must(template.New("edittask").ParseFiles("templates/layout.tmpl",
 		"templates/edittask.tmpl"))
 	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks",
 		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
-		"Identifier": id, "Scheduled": edittask[0].Scheduled})
+		"Identifier": intid, "Scheduled": edittask[0].Scheduled})
 }
 
 func updatetask(w http.ResponseWriter, r *http.Request) {
