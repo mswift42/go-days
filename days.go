@@ -3,6 +3,7 @@ package days
 import (
 	"appengine"
 	"appengine/datastore"
+	"appengine/user"
 	"fmt"
 	"html/template"
 	"net/http"
@@ -29,6 +30,17 @@ func home(w http.ResponseWriter, r *http.Request) {
 	homeTmpl := template.Must(template.New("home").ParseFiles("templates/home.tmpl",
 		"templates/layout.tmpl"))
 	c := appengine.NewContext(r)
+	u := user.Current(c)
+	if u == nil {
+		url, err := user.LoginURL(c, r.URL.String())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Location", url)
+		w.WriteHeader(http.StatusFound)
+		return
+	}
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
 	if _, err := q.GetAll(c, &tasks); err != nil {
@@ -102,11 +114,6 @@ func about(w http.ResponseWriter, r *http.Request) {
 		"templates/about.tmpl"))
 	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "About"})
 }
-func testGetAndEntity(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
-	t, _ := GetEntityAndKey("1396977797", c)
-	fmt.Fprintf(w, "%v", t)
-}
 
 func init() {
 	http.HandleFunc("/", home)
@@ -115,21 +122,4 @@ func init() {
 	http.HandleFunc("/newtask", newtask)
 	http.HandleFunc("/edittask", edittask)
 	http.HandleFunc("/updatetask", updatetask)
-	http.HandleFunc("/test", testGetAndEntity)
-}
-
-func GetEntityAndKey(id string, c appengine.Context) (task Task, k *datastore.Key) {
-	q := datastore.NewQuery("Task").Filter("Identifier =", id)
-	t := q.Run(c)
-	for {
-		var task Task
-		k, err := t.Next(&task)
-		if err == datastore.Done {
-			return task, k
-		}
-		if err != nil {
-			c.Errorf("Fetching next Task :%v", err)
-
-		}
-	}
 }
