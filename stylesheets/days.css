@@ -32,6 +32,7 @@ div.content {
     padding:12px;
     width:38em;
     margin:auto;
+
 }
 
 div.taskinline {
@@ -42,4 +43,18 @@ div.control-group {
 }
 .control-label {
     margin-right:4px;
+}
+.navbar-inner {
+  background-color: #efece3;
+  background-image: none;
+  background-repeat: no-repeat;
+  filter: none;
+}
+div.bannerheader {
+    margin-left:24px;
+}
+.tsummary {
+    text-align:center;
+    width:200px;
+    margin:auto;
 }

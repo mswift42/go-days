@@ -4,13 +4,33 @@
   <h2 class="header">Edit Tasks</h2>
 
 
-<form action="/updatetask" method="post">
-  <p>{{.Summary}}</p>
-  <textarea class="form-control" name="tarea" rows="5">{{.Content}}</textarea>
-  <input type="text" id="datepicker" value={{.Scheduled}} name="scheduled" />
-  <input type="hidden" value={{.Identifier}} name="taskid" />
-  <button class="btn" id="singlebutton" >Save</button>
+  <form class="form-horizontal" action="/updatetask" method="post">
+    <fieldset>
 
-</form>
+      <div class="content">
+        <div class="control-group">
+          <h3 class="tsummary">{{.Summary}}</h3>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="tarea">Edit Task Contents</label>
+          <div class="controls">
+            <textarea class="form-control" name="tarea" rows="5">{{.Content}}</textarea>
+          </div>
+        </div>
+        <div class="control-group">
+          <label class="control-label" for="scheduled">Edit the date</label>
+          <div class="controls">
+            <input type="text" id="datepicker" value={{.Scheduled}} name="scheduled" />
+          </div>
+        </div>
+        <input type="hidden" value={{.Identifier}} name="taskid" />
+        <div class="control-group">
+          <div class="controls">
+            <button class="btn" id="singlebutton" >Save</button>
+          </div>
+        </div>
+      </div>
+    </fieldset>
+  </form>
 </div>
 {{end}}
