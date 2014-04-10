@@ -20,10 +20,6 @@ type Task struct {
 	Identifier string
 }
 
-func tasklistkey(c appengine.Context) *datastore.Key {
-	return datastore.NewKey(c, "Task", "", 0, nil)
-}
-
 func home(w http.ResponseWriter, r *http.Request) {
 	homeTmpl := template.Must(template.New("home").ParseFiles("templates/home.tmpl",
 		"templates/layout.tmpl"))
@@ -54,7 +50,7 @@ func storetask(w http.ResponseWriter, r *http.Request) {
 		Scheduled:  r.FormValue("scheduled"),
 		Done:       false,
 		Identifier: fmt.Sprintf("%d", time.Now().Unix())}
-	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
+	key := datastore.NewKey(c, "Task", "", 0, nil)
 	_, err := datastore.Put(c, key, &t)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
