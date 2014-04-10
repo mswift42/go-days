@@ -118,19 +118,6 @@ func init() {
 	http.HandleFunc("/test", testGetAndEntity)
 }
 
-// func GetOrUpdate(c appengine.Context,id,content, scheduled string) error {
-// 	return datastore.RunInTransaction(c, func(c appengine.Context) error {
-// 		task := new(Task)
-// 		err := datastore.Get(c, tasklistkey(c), task)
-// 		if err != nil && err != datastore.ErrNoSuchEntity {
-// 			return err
-// 		}
-// 		task.Scheduled = scheduled
-// 		task.Content = content
-// 		_, err = datastore.Put(c, tasklistkey(c), &task)
-// 		return err
-// 	}, nil)
-// }
 func GetEntityAndKey(id string, c appengine.Context) (task Task, k *datastore.Key) {
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
 	t := q.Run(c)
