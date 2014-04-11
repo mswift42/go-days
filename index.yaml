@@ -13,17 +13,4 @@ indexes:
 - kind: Task
   ancestor: yes
   properties:
-  - name: Date
-    direction: desc
-
-- kind: Task
-  ancestor: yes
-  properties:
   - name: Scheduled
-    direction: desc
-
-- kind: Tasklist
-  ancestor: yes
-  properties:
-  - name: Date
-    direction: desc
