@@ -54,9 +54,12 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 }
 func newtask(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	u := user.Current(c)
 	newTmpl := template.Must(template.New("newtask").ParseFiles("templates/layout.tmpl",
 		"templates/newtask.tmpl"))
-	if err := newTmpl.Execute(w, map[string]interface{}{"Pagetitle": "New Task"}); err != nil {
+	if err := newTmpl.Execute(w, map[string]interface{}{"Pagetitle": "New Task",
+		"User": u}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -78,13 +81,14 @@ func storetask(w http.ResponseWriter, r *http.Request) {
 }
 func edittask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
+	u := user.Current(c)
 	id := r.FormValue("taskid")
 	var edittask []Task
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
 	q.GetAll(c, &edittask)
 	tmpl := template.Must(template.New("edittask").ParseFiles("templates/layout.tmpl",
 		"templates/edittask.tmpl"))
-	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks",
+	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks", "User": u,
 		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
 		"Identifier": id, "Scheduled": edittask[0].Scheduled})
 }
@@ -111,9 +115,11 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 }
 
 func about(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	u := user.Current(c)
 	tmpl := template.Must(template.New("about").ParseFiles("templates/layout.tmpl",
 		"templates/about.tmpl"))
-	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "About"})
+	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "About", "User": u})
 }
 
 func init() {
