@@ -9,7 +9,7 @@
     <link href="/stylesheets/bootstrap.min.css" rel="stylesheet"/>
     <link href="/stylesheets/days.css" rel="stylesheet"/>
     <script>
-      $(function(){$("#datepicker").datepicker();});
+      $(function(){$("#datepicker").datepicker({autoclose: true,todayHighlight: true});});
     </script>
   <link href="/stylesheets/datepicker.css" rel="stylesheet"/>
   <title>{{.Pagetitle }}
@@ -37,6 +37,9 @@
         <ul class="nav navbar-right">
           <li class="active navbar-right">
             <p class="navbar-text"><strong>DAYS - Do All Your Stuff</strong></p>
+          </li>
+          <li class="active navbar-right">
+            <a href="/signout">{{.User}}</a>
           </li>
         </ul>
         </div>

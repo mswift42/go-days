@@ -31,14 +31,15 @@ func home(w http.ResponseWriter, r *http.Request) {
 		"templates/layout.tmpl"))
 	c := appengine.NewContext(r)
 	u := user.Current(c)
+	w.Header().Set("Content-type", "text/html; charset=utf-8")
+
 	if u == nil {
-		url, err := user.LoginURL(c, r.URL.String())
+		url, err := user.LoginURL(c, "/")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		w.Header().Set("Location", url)
-		w.WriteHeader(http.StatusFound)
+		fmt.Fprintf(w, `<h href="%s">Sign in or register</a>`, url)
 		return
 	}
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
@@ -48,7 +49,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := homeTmpl.Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
-		"tasks": tasks}); err != nil {
+		"tasks": tasks, "User": u}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
