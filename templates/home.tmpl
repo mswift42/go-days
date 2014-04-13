@@ -7,8 +7,10 @@
 {{range .tasks}}
 <div class="content">
     <h4 class="header">{{ .Summary}}</h4>
-<div class="taskinline">
-<pre>{{.Content}}</pre>
+    <div class="taskinline">
+      <div class="well well-lg">
+        <pre>{{.Content}}</pre>
+        </div>
 <p>{{.Scheduled}}
 </p>
 <form action="/edittask" method="post">
