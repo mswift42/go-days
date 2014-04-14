@@ -22,6 +22,19 @@
           <div class="controls">
             <input type="text" id="datepicker" value={{.Scheduled}} name="scheduled" />
           </div>
+          <div class="radio">
+  <label>
+    <input type="radio" name="Done" id="optionsRadios1" value="Todo" checked>
+    Todo
+  </label>
+</div>
+<div class="radio">
+  <label>
+    <input type="radio" name="Done" id="optionsRadios2" value="Done">
+    Done
+  </label>
+</div>
+
         </div>
         <input type="hidden" value={{.Identifier}} name="taskid" />
         <div class="control-group">
