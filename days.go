@@ -17,7 +17,7 @@ type Task struct {
 	Summary    string
 	Content    string
 	Scheduled  string
-	Done       bool
+	Done       string
 	Identifier string
 }
 
@@ -32,15 +32,17 @@ func home(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
 	w.Header().Set("Content-type", "text/html; charset=utf-8")
+	NotSignedIn := ``
 
 	if u == nil {
-		url, err := user.LoginURL(c, "/")
+		url, err := user.LoginURL(c, "/signin")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		fmt.Fprintf(w, `<h href="%s">Sign in or register</a>`, url)
-		return
+		// fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
+		// return
+		NotSignedIn = `<a href="` + url + `">Please sign in</a>`
 	}
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
@@ -49,7 +51,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	if err := homeTmpl.Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
-		"tasks": tasks, "User": u}); err != nil {
+		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -69,7 +71,7 @@ func storetask(w http.ResponseWriter, r *http.Request) {
 	t := Task{Summary: r.FormValue("tinput"),
 		Content:    r.FormValue("tarea"),
 		Scheduled:  r.FormValue("scheduled"),
-		Done:       false,
+		Done:       "Todo",
 		Identifier: fmt.Sprintf("%d", time.Now().Unix())}
 	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
 	_, err := datastore.Put(c, key, &t)
@@ -90,7 +92,8 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 		"templates/edittask.tmpl"))
 	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks", "User": u,
 		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
-		"Identifier": id, "Scheduled": edittask[0].Scheduled})
+		"Identifier": id, "Scheduled": edittask[0].Scheduled,
+		"Done": edittask[0].Done})
 }
 
 func updatetask(w http.ResponseWriter, r *http.Request) {
@@ -98,6 +101,7 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("taskid")
 	scheduled := r.FormValue("scheduled")
 	content := r.FormValue("tarea")
+	done := r.FormValue("Done")
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
 	var edittask []Task
 	key, err := q.GetAll(c, &edittask)
@@ -106,6 +110,7 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	}
 	edittask[0].Scheduled = scheduled
 	edittask[0].Content = content
+	edittask[0].Done = done
 	_, nerr := datastore.Put(c, key[0], &edittask[0])
 	if nerr != nil {
 		http.Error(w, nerr.Error(), http.StatusInternalServerError)
