@@ -88,12 +88,19 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 	var edittask []Task
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
 	q.GetAll(c, &edittask)
+	done := edittask[0].Done
+	check1, check2 := "", ""
+	if done == "Todo" {
+		check1, check2 = "checked", ""
+	}
+	check1, check2 = "", "checked"
+
 	tmpl := template.Must(template.New("edittask").ParseFiles("templates/layout.tmpl",
 		"templates/edittask.tmpl"))
 	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks", "User": u,
 		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
 		"Identifier": id, "Scheduled": edittask[0].Scheduled,
-		"Done": edittask[0].Done})
+		"Check1": check1, "Check2": check2})
 }
 
 func updatetask(w http.ResponseWriter, r *http.Request) {
