@@ -101,7 +101,7 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks", "User": u,
 		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
 		"Identifier": id, "Scheduled": edittask[0].Scheduled,
-		"Check1": check1, "Check2": check2, "Done": done})
+		"Check1": check1, "Check2": check2})
 }
 
 func updatetask(w http.ResponseWriter, r *http.Request) {
