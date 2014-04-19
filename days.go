@@ -42,7 +42,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 		}
 		// fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
 		// return
-		NotSignedIn = `<a href="` + url + `">Please sign in</a>`
+		http.Redirect(w, r, url, http.StatusFound)
 	}
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
@@ -92,15 +92,16 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 	check1, check2 := "", ""
 	if done == "Todo" {
 		check1, check2 = "checked", ""
+	} else {
+		check1, check2 = "", "checked"
 	}
-	check1, check2 = "", "checked"
 
 	tmpl := template.Must(template.New("edittask").ParseFiles("templates/layout.tmpl",
 		"templates/edittask.tmpl"))
 	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks", "User": u,
 		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
 		"Identifier": id, "Scheduled": edittask[0].Scheduled,
-		"Check1": check1, "Check2": check2})
+		"Check1": check1, "Check2": check2, "Done": done})
 }
 
 func updatetask(w http.ResponseWriter, r *http.Request) {
