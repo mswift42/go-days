@@ -2,6 +2,7 @@
 <!doctype HTML>
 <head>
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.12.0/jquery.validate.min.js"></script>
   <!-- <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" /> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
   <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"> -->
@@ -10,7 +11,24 @@
     <link href="/stylesheets/days.css" rel="stylesheet"/>
     <script>
       $(function(){$("#datepicker").datepicker({autoclose: true,todayHighlight: true});});
+
     </script>
+<script>
+        $(document).ready(function () {
+
+        $('.tarea').validate();});
+
+
+
+
+
+
+
+
+</script>
+
+
+
   <link href="/stylesheets/datepicker.css" rel="stylesheet"/>
   <title>{{.Pagetitle }}
   </title>
