@@ -5,7 +5,7 @@
   <br/>
   <br/>
 
-  <form class="form-horizontal" method="post" action="/storetask">
+  <form class="form-horizontal" method="post" id="postform" action="/storetask">
     <fieldset>
       <div class="content">
         <div class="control-group">
@@ -17,7 +17,7 @@
         <div class="control-group">
           <label class="control-label" for="tarea">Task Contents</label>
           <div class="controls">
-            <textarea class="form-control" name="tarea" rows="5"></textarea>
+            <textarea class="form-control" name="tarea" id="tarea" rows="5"></textarea>
           </div>
         </div>
         <div class="control-group">
@@ -36,6 +36,12 @@
 </fieldset>
 </form>
 </div>
+<script>$().ready(function() {
+  $("#postform").validate({
+  rules: {
+  tarea:"required",
+  tinput:"required"}});});
+  </script>
 </div>
 {{end}}
 
