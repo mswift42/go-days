@@ -116,15 +116,20 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
-	edittask[0].Scheduled = scheduled
-	edittask[0].Content = content
-	edittask[0].Done = done
-	_, nerr := datastore.Put(c, key[0], &edittask[0])
-	if nerr != nil {
-		http.Error(w, nerr.Error(), http.StatusInternalServerError)
-		return
+	if btn := r.FormValue("taskidbutton"); btn == "delete" {
+		datastore.Delete(c, key[0])
+	} else {
+		edittask[0].Scheduled = scheduled
+		edittask[0].Content = content
+		edittask[0].Done = done
+		_, nerr := datastore.Put(c, key[0], &edittask[0])
+		if nerr != nil {
+			http.Error(w, nerr.Error(), http.StatusInternalServerError)
+			return
+		}
 	}
 	http.Redirect(w, r, "/", http.StatusFound)
+
 }
 
 func about(w http.ResponseWriter, r *http.Request) {
