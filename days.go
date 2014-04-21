@@ -21,6 +21,8 @@ type Task struct {
 	Identifier string
 }
 
+// withLayout - take a template name and a templatefile
+// and return it combined with layout.tmpl.
 func withLayout(name, templ string) *template.Template {
 	return template.Must(template.New(name).ParseFiles(templ, "templates/layout.tmpl"))
 }
@@ -62,10 +64,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 func newtask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
-	newTmpl := template.Must(template.New("newtask").ParseFiles("templates/layout.tmpl",
-		"templates/newtask.tmpl"))
-	if err := newTmpl.Execute(w, map[string]interface{}{"Pagetitle": "New Task",
-		"User": u}); err != nil {
+	if err := withLayout("newtask", "templates/newtask.tmpl").Execute(w,
+		map[string]interface{}{"Pagetitle": "New Task", "User": u}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
