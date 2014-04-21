@@ -33,8 +33,6 @@ func tasklistkey(c appengine.Context) *datastore.Key {
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	// homeTmpl := template.Must(template.New("home").ParseFiles("templates/home.tmpl",
-	// 	"templates/layout.tmpl"))
 	c := appengine.NewContext(r)
 	u := user.Current(c)
 	w.Header().Set("Content-type", "text/html; charset=utf-8")
@@ -99,13 +97,11 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 	} else {
 		check1, check2 = "", "checked"
 	}
-
-	tmpl := template.Must(template.New("edittask").ParseFiles("templates/layout.tmpl",
-		"templates/edittask.tmpl"))
-	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "Edit Tasks", "User": u,
-		"Summary": edittask[0].Summary, "Content": edittask[0].Content,
-		"Identifier": id, "Scheduled": edittask[0].Scheduled,
-		"Check1": check1, "Check2": check2})
+	withLayout("edittask", "templates/edittask.tmpl").Execute(w,
+		map[string]interface{}{"Pagetitle": "Edit Tasks", "User": u,
+			"Summary": edittask[0].Summary, "Content": edittask[0].Content,
+			"Identifier": id, "Scheduled": edittask[0].Scheduled,
+			"Check1": check1, "Check2": check2})
 }
 
 func updatetask(w http.ResponseWriter, r *http.Request) {
@@ -134,9 +130,8 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 func about(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
-	tmpl := template.Must(template.New("about").ParseFiles("templates/layout.tmpl",
-		"templates/about.tmpl"))
-	tmpl.Execute(w, map[string]interface{}{"Pagetitle": "About", "User": u})
+	withLayout("about", "templates/about.tmpl").Execute(w,
+		map[string]interface{}{"Pagetitle": "About", "User": u})
 }
 
 func init() {
