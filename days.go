@@ -21,14 +21,18 @@ type Task struct {
 	Identifier string
 }
 
+func withLayout(name, templ string) *template.Template {
+	return template.Must(template.New(name).ParseFiles(templ, "templates/layout.tmpl"))
+}
+
 func tasklistkey(c appengine.Context) *datastore.Key {
 	return datastore.NewKey(c, "Task", "default_tasklist", 0, nil)
 
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
-	homeTmpl := template.Must(template.New("home").ParseFiles("templates/home.tmpl",
-		"templates/layout.tmpl"))
+	// homeTmpl := template.Must(template.New("home").ParseFiles("templates/home.tmpl",
+	// 	"templates/layout.tmpl"))
 	c := appengine.NewContext(r)
 	u := user.Current(c)
 	w.Header().Set("Content-type", "text/html; charset=utf-8")
@@ -50,7 +54,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	if err := homeTmpl.Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
+	if err := withLayout("home", "templates/home.tmpl").Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
 		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
