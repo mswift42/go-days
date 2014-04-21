@@ -20,7 +20,7 @@
         <div class="control-group">
           <label class="control-label" for="scheduled">Edit the date</label>
           <div class="controls">
-            <input type="text" id="datepicker" value={{.Scheduled}} name="scheduled" />
+            <input type="text" class="datepicker" value={{.Scheduled}} name="scheduled" />
           </div>
 
           <div class="radio">
@@ -40,7 +40,8 @@
         <input type="hidden" value={{.Identifier}} name="taskid" />
         <div class="control-group">
           <div class="controls">
-            <button class="btn" id="singlebutton" >Save</button>
+            <button class="btn" id="singlebutton"name="taskidbutton" value="save">save</button>
+            <button class="btn" id="singlebutton"name="taskidbutton" value="delete">delete</button>
           </div>
         </div>
       </div>
