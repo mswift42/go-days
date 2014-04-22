@@ -3,6 +3,7 @@ package days
 import (
 	"appengine/aetest"
 	"appengine/datastore"
+	"appengine/user"
 	//	"reflect"
 	"testing"
 )
@@ -25,6 +26,10 @@ func TestTasks(t *testing.T) {
 	t1 := Task{Summary: "task1", Content: "some content", Identifier: "123",
 		Done: "Done"}
 	c, err := aetest.NewContext(nil)
+	u := user.Current(c)
+	if u != nil {
+		t.Fatal(err)
+	}
 	if err != nil {
 		t.Fatal(err)
 	}

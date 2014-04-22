@@ -147,6 +147,11 @@ func about(w http.ResponseWriter, r *http.Request) {
 	withLayout("about", "templates/about.tmpl").Execute(w,
 		map[string]interface{}{"Pagetitle": "About", "User": u})
 }
+func signout(w http.ResponseWriter, r *http.Request) {
+	c := appengine.NewContext(r)
+	url, _ := user.LogoutURL(c, "/")
+	fmt.Fprintf(w, url)
+}
 
 func init() {
 	http.HandleFunc("/", home)
@@ -155,4 +160,5 @@ func init() {
 	http.HandleFunc("/newtask", newtask)
 	http.HandleFunc("/edittask", edittask)
 	http.HandleFunc("/updatetask", updatetask)
+	http.HandleFunc("/signout", signout)
 }
