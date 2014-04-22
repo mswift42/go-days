@@ -45,18 +45,18 @@ func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "text/html; charset=utf-8")
 	NotSignedIn := ``
 
-	if u == nil {
-		url, err := user.LoginURL(c, r.URL.String())
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-		// fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
-		// return
-		w.Header().Set("Location", url)
-		w.WriteHeader(http.StatusFound)
-		return
-	}
+	// if u == nil {
+	// 	url, err := user.LoginURL(c, r.URL.String())
+	// 	if err != nil {
+	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
+	// 		return
+	// 	}
+	// 	// fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
+	// 	// return
+	// 	w.Header().Set("Location", url)
+	// 	w.WriteHeader(http.StatusFound)
+	// 	return
+	// }
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
 	if _, err := q.GetAll(c, &tasks); err != nil {
@@ -153,8 +153,30 @@ func signout(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintf(w, url)
 }
 
+func openIdHandler(w http.ResponseWriter, r *http.Request) {
+	providers := map[string]string{
+		"Google":   "www.google.com/accounts/o8/id", // shorter alternative: "Gmail.com"
+		"Yahoo":    "yahoo.com",
+		"MySpace":  "myspace.com",
+		"AOL":      "aol.com",
+		"MyOpenID": "myopenid.com",
+		// add more here
+	}
+
+	c := appengine.NewContext(r)
+	fmt.Fprintf(w, "Sign in at: ")
+	for name, url := range providers {
+		login_url, err := user.LoginURLFederated(c, "/", url)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+		}
+		fmt.Fprintf(w, "[<a href='%s'>%s</a>]", login_url, name)
+	}
+}
+
 func init() {
 	http.HandleFunc("/", home)
+	http.HandleFunc("/_ah/login_required", openIdHandler)
 	http.HandleFunc("/about", about)
 	http.HandleFunc("/storetask", storetask)
 	http.HandleFunc("/newtask", newtask)
