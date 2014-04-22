@@ -46,14 +46,16 @@ func home(w http.ResponseWriter, r *http.Request) {
 	NotSignedIn := ``
 
 	if u == nil {
-		url, err := user.LoginURL(c, "/signin")
+		url, err := user.LoginURL(c, r.URL.String())
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 		// fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
 		// return
-		http.Redirect(w, r, url, http.StatusFound)
+		w.Header().Set("Location", url)
+		w.WriteHeader(http.StatusFound)
+		return
 	}
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
