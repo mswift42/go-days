@@ -21,6 +21,13 @@ type Task struct {
 	Identifier string
 }
 
+// User - struct for datastore table.
+// Contains the user's email and his tasks.
+type User struct {
+	Email string
+	Task
+}
+
 // withLayout - take a template name and a templatefile
 // and return it combined with layout.tmpl.
 func withLayout(name, templ string) *template.Template {
