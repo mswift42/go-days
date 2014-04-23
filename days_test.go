@@ -4,7 +4,7 @@ import (
 	"appengine/aetest"
 	"appengine/datastore"
 	"appengine/user"
-	//	"reflect"
+	"reflect"
 	"testing"
 )
 
@@ -25,6 +25,7 @@ func TestUser(t *testing.T) {
 func TestTasks(t *testing.T) {
 	t1 := Task{Summary: "task1", Content: "some content", Identifier: "123",
 		Done: "Done"}
+	t2 := Task{Content: "more content", Done: "Todo"}
 	c, err := aetest.NewContext(nil)
 	u := user.Current(c)
 	if u != nil {
@@ -37,10 +38,24 @@ func TestTasks(t *testing.T) {
 	if _, err := datastore.Put(c, key, &t1); err != nil {
 		t.Fatal(err)
 	}
-	t2 := Task{}
-	if err := datastore.Get(c, key, &t2); err != nil {
+	nkey := datastore.NewKey(c, "Task", "", 2, nil)
+	if _, err := datastore.Put(c, nkey, &t2); err != nil {
+		t.Fatal(err)
+	}
+	gt1 := Task{}
+	gt2 := Task{}
+	if err := datastore.Get(c, key, &gt1); err != nil {
 		t.Fatal(err)
 
+	}
+	if err := datastore.Get(c, nkey, &gt2); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(gt1, t1) {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(gt2, t2) {
+		t.Fatal(err)
 	}
 	// if reflect.TypeOf(t2) !=  {
 	// 	t.Fatal(err)
