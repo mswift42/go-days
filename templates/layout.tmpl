@@ -9,15 +9,15 @@
   <!-- <link rel="stylesheet" href="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/themes/smoothness/jquery-ui.css" /> -->
   <!-- <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.10.4/jquery-ui.min.js"></script> -->
   <!-- <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css"> -->
-  <script src="/stylesheets/bootstrap-datepicker.js"></script>
-    <!-- <link href="/stylesheets/bootstrap.min.css" rel="stylesheet"/> -->
+  <script src="/stylesheets/bootstrap-datepicker.js" type="application/javascript"></script>
+  <link href="/stylesheets/datepicker3.css" rel="stylesheet"/>
     <link href="/stylesheets/days.css" rel="stylesheet"/>
     <script>
-      $(function(){$("#datepicker").datepicker({autoclose: true,todayHighlight: true});});
+      $(function(){$(".datepicker").datepicker({autoclose: true,todayHighlight: true});});
 
     </script>
 
-  <link href="/stylesheets/datepicker.css" rel="stylesheet"/>
+  <!-- <link href="/stylesheets/datepicker.css" rel="stylesheet"/> -->
   <title>{{.Pagetitle }}
   </title>
 </head>
@@ -45,7 +45,7 @@
             <p class="navbar-text"><strong>DAYS - Do All Your Stuff</strong></p>
           </li>
           <li class="active navbar-right">
-            <a href="/signout">{{.User}}</a>
+            <a href={{.Logout}}>{{.User}}</a>
           </li>
         </ul>
         </div>
