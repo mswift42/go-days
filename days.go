@@ -14,6 +14,7 @@ import (
 // Contains a summary and the contents of a task, the scheduled
 // time for the task and whether it is done or not.
 type Task struct {
+	User       string
 	Summary    string
 	Content    string
 	Scheduled  string
@@ -21,12 +22,13 @@ type Task struct {
 	Identifier string
 }
 
-// User - struct for datastore table.
-// Contains the user's email and his tasks.
-type User struct {
-	Email string
-	Task
-}
+// // User - struct for datastore table.
+// // Contains the user's email and his tasks.
+// type User struct {
+// 	Email string
+// 	*User
+// 	Task
+// }
 
 // withLayout - take a template name and a templatefile
 // and return it combined with layout.tmpl.
@@ -45,26 +47,27 @@ func home(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-type", "text/html; charset=utf-8")
 	NotSignedIn := ``
 
-	// if u == nil {
-	// 	url, err := user.LoginURL(c, r.URL.String())
-	// 	if err != nil {
-	// 		http.Error(w, err.Error(), http.StatusInternalServerError)
-	// 		return
-	// 	}
-	// 	// fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
-	// 	// return
-	// 	w.Header().Set("Location", url)
-	// 	w.WriteHeader(http.StatusFound)
-	// 	return
-	// }
-	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Order("Scheduled").Limit(10)
+	if u == nil {
+		url, err := user.LoginURL(c, r.URL.String())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		// fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
+		// return
+		w.Header().Set("Location", url)
+		w.WriteHeader(http.StatusFound)
+		return
+	}
+	url, _ := user.LogoutURL(c, "/about")
+	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Filter("User =", fmt.Sprintf("%s", u)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
 	if _, err := q.GetAll(c, &tasks); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	if err := withLayout("home", "templates/home.tmpl").Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
-		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn}); err != nil {
+		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn, "Logout": url}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
@@ -79,7 +82,9 @@ func newtask(w http.ResponseWriter, r *http.Request) {
 
 func storetask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
-	t := Task{Summary: r.FormValue("tinput"),
+	user := user.Current(c)
+	t := Task{User: fmt.Sprintf("%s", user),
+		Summary:    r.FormValue("tinput"),
 		Content:    r.FormValue("tarea"),
 		Scheduled:  r.FormValue("scheduled"),
 		Done:       "Todo",
@@ -148,35 +153,12 @@ func about(w http.ResponseWriter, r *http.Request) {
 		map[string]interface{}{"Pagetitle": "About", "User": u})
 }
 func signout(w http.ResponseWriter, r *http.Request) {
-	c := appengine.NewContext(r)
-	url, _ := user.LogoutURL(c, "/")
-	fmt.Fprintf(w, url)
-}
-
-func openIdHandler(w http.ResponseWriter, r *http.Request) {
-	providers := map[string]string{
-		"Google":   "www.google.com/accounts/o8/id", // shorter alternative: "Gmail.com"
-		"Yahoo":    "yahoo.com",
-		"MySpace":  "myspace.com",
-		"AOL":      "aol.com",
-		"MyOpenID": "myopenid.com",
-		// add more here
-	}
-
-	c := appengine.NewContext(r)
-	fmt.Fprintf(w, "Sign in at: ")
-	for name, url := range providers {
-		login_url, err := user.LoginURLFederated(c, "/", url)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-		}
-		fmt.Fprintf(w, "[<a href='%s'>%s</a>]", login_url, name)
-	}
+	//ign	c := appengine.NewContext(r)
+	fmt.Fprintf(w, "You are logged out, please have yourself a great day")
 }
 
 func init() {
 	http.HandleFunc("/", home)
-	http.HandleFunc("/_ah/login_required", openIdHandler)
 	http.HandleFunc("/about", about)
 	http.HandleFunc("/storetask", storetask)
 	http.HandleFunc("/newtask", newtask)
