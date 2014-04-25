@@ -59,7 +59,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusFound)
 		return
 	}
-	url, _ := user.LogoutURL(c, "/about")
+	url, _ := user.LogoutURL(c, "/signout")
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Filter("User =", fmt.Sprintf("%s", u)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
 	if _, err := q.GetAll(c, &tasks); err != nil {
@@ -154,7 +154,9 @@ func about(w http.ResponseWriter, r *http.Request) {
 }
 func signout(w http.ResponseWriter, r *http.Request) {
 	//ign	c := appengine.NewContext(r)
-	fmt.Fprintf(w, "You are logged out, please have yourself a great day")
+	withLayout("signout", "templates/signout.tmpl").Execute(w,
+		map[string]interface{}{"Pagetitle": "signout"})
+
 }
 
 func init() {
