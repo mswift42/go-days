@@ -149,8 +149,10 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 func about(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
+	url, _ := user.LogoutURL(c, "/signout")
 	withLayout("about", "templates/about.tmpl").Execute(w,
-		map[string]interface{}{"Pagetitle": "About", "User": u})
+		map[string]interface{}{"Pagetitle": "About",
+			"Logout": url, "User": u})
 }
 func signout(w http.ResponseWriter, r *http.Request) {
 	//ign	c := appengine.NewContext(r)
