@@ -22,10 +22,16 @@ type Task struct {
 	Identifier string
 }
 
+// parseTime - convert a time string with layout
+// dd/mm/yyyy to time.Time type.
 func parseTime(s string) time.Time {
 	layout := "02/01/2006"
 	t, _ := time.Parse(layout, s)
 	return t
+}
+func formatDate(t time.Time) string {
+	layout := "02/01/2006"
+	return t.Format(layout)
 }
 
 // withLayout - take a template name and a templatefile
@@ -71,7 +77,8 @@ func newtask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
 	if err := withLayout("newtask", "templates/newtask.tmpl").Execute(w,
-		map[string]interface{}{"Pagetitle": "New Task", "User": u}); err != nil {
+		map[string]interface{}{"Pagetitle": "New Task", "User": u,
+			"Today": formatDate(time.Now())}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
