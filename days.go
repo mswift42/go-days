@@ -22,13 +22,11 @@ type Task struct {
 	Identifier string
 }
 
-// // User - struct for datastore table.
-// // Contains the user's email and his tasks.
-// type User struct {
-// 	Email string
-// 	*User
-// 	Task
-// }
+func parseTime(s string) time.Time {
+	layout := "02/01/2006"
+	t, _ := time.Parse(layout, s)
+	return t
+}
 
 // withLayout - take a template name and a templatefile
 // and return it combined with layout.tmpl.
@@ -53,8 +51,6 @@ func home(w http.ResponseWriter, r *http.Request) {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-		// fmt.Fprintf(w, `<a href="%s">Sign in or register</a>`, url)
-		// return
 		w.Header().Set("Location", url)
 		w.WriteHeader(http.StatusFound)
 		return
@@ -155,7 +151,6 @@ func about(w http.ResponseWriter, r *http.Request) {
 			"Logout": url, "User": u})
 }
 func signout(w http.ResponseWriter, r *http.Request) {
-	//ign	c := appengine.NewContext(r)
 	withLayout("signout", "templates/signout.tmpl").Execute(w,
 		map[string]interface{}{"Pagetitle": "signout"})
 
