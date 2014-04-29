@@ -9,19 +9,18 @@ import (
 	"time"
 )
 
-// func TestUser(t *testing.T) {
-// 	t1 := Task{Summary: "task1", Identifier: "123"}
-// 	us := User{Email: "test@example.com", Task: t1}
-// 	if us.Email != "test@example.com" {
-// 		t.Error("Expected text@example.com, got: ", us.Email)
-// 	}
-// 	if us.Task.Identifier != "123" {
-// 		t.Error("Expted <123>, got: ", us.Task.Identifier)
-// 	}
-// 	if us.Task.Summary != "task1" {
-// 		t.Error("Exptected <task1>, got: ", us.Task.Summary)
-// 	}
-// }
+func TestTask(t *testing.T) {
+	t1 := Task{Summary: "task1", User: "test@example.com", Identifier: "123"}
+	if t1.User != "test@example.com" {
+		t.Error("Expected text@example.com, got: ", t1.User)
+	}
+	if t1.Identifier != "123" {
+		t.Error("Expted <123>, got: ", t1.Identifier)
+	}
+	if t1.Summary != "task1" {
+		t.Error("Exptected <task1>, got: ", t1.Summary)
+	}
+}
 
 func TestTasks(t *testing.T) {
 	t1 := Task{Summary: "task1", Content: "some content", Identifier: "123",
@@ -75,5 +74,20 @@ func TestParseTime(t *testing.T) {
 	}
 	if t2.Month() != time.March {
 		t.Error("Expected March, got: ", t2.Month())
+	}
+}
+
+func TestFormatDate(t *testing.T) {
+	s1 := "01/02/2003"
+	s2 := "03/04/2005"
+	time1 := parseTime(s1)
+	time2 := parseTime(s2)
+	formatted := formatDate(time1)
+	formatted2 := formatDate(time2)
+	if formatted != s1 {
+		t.Error("Expected <01/02/2003>, got: ", formatted)
+	}
+	if formatted2 != s2 {
+		t.Error("Expected <01/02/2005>, got: ", formatted2)
 	}
 }

@@ -29,6 +29,9 @@ func parseTime(s string) time.Time {
 	t, _ := time.Parse(layout, s)
 	return t
 }
+
+// formatDate - convert a time.Time type
+// to a string with layout dd/mm/yyyy
 func formatDate(t time.Time) string {
 	layout := "02/01/2006"
 	return t.Format(layout)
