@@ -23,7 +23,7 @@
         <div class="control-group">
           <label for="scheduled" class="col-md-4 control-label">Scheduled</label>
           <div class="controls">
-            <input type="text" id="datepicker" name="scheduled" value="pick a date"/>
+            <input type="text" class="datepicker" name="scheduled" value={{.Today}}/>
           </div>
         </div>
         <div class="control-group">
@@ -40,7 +40,8 @@
   $("#postform").validate({
   rules: {
   tarea:"required",
-  tinput:"required"}});});
+  tinput:"required"}})
+  ;});
   </script>
 </div>
 {{end}}
