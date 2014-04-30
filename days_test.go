@@ -91,3 +91,9 @@ func TestFormatDate(t *testing.T) {
 		t.Error("Expected <01/02/2005>, got: ", formatted2)
 	}
 }
+func TestElapsedDays(t *testing.T) {
+	day1 := parseTime("01/01/2000")
+	day2 := parseTime("02/01/2000")
+	dur := elapsedDays(day1, day2)
+	t.Error(dur)
+}
