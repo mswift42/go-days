@@ -45,6 +45,21 @@ func elapsedDays(day1, day2 time.Time) int64 {
 	return (dur1 - dur2) / 24
 }
 
+// weekDates - takes a datestring in format dd/mm/yyyy
+// and returns a slice of dates of range startday - 1 week from startday.
+func weekDates(s string) []time.Time {
+	startday := parseTime(s)
+	week := make([]time.Time, 7)
+	for i := int64(0); i < 7; i++ {
+		week[i] = addDay(startday, i)
+	}
+	return week
+}
+
+func addDay(startday time.Time, day int64) time.Time {
+	return startday.Add(time.Duration(time.Hour * 24))
+}
+
 // withLayout - take a template name and a templatefile
 // and return it combined with layout.tmpl.
 func withLayout(name, templ string) *template.Template {
