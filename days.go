@@ -32,14 +32,17 @@ func parseTime(s string) time.Time {
 
 // formatDate - convert a time.Time type
 // to a string with layout dd/mm/yyyy
-func formatDate(t *time.Time) string {
+func formatDate(t time.Time) string {
 	layout := "02/01/2006"
 	return t.Format(layout)
 }
-func elapsedDays(day1, day2 *time.Time) int64 {
-	dur1 := time.Duration(day1)
-	dur2 := time.Duration(day2)
-	return dur2 - dur1
+
+// elapsedDays - return elapsed days between
+// two dates.
+func elapsedDays(day1, day2 time.Time) int64 {
+	dur1 := int64(time.Since(day1).Hours())
+	dur2 := int64(time.Since(day2).Hours())
+	return (dur1 - dur2) / 24
 }
 
 // withLayout - take a template name and a templatefile

@@ -94,6 +94,17 @@ func TestFormatDate(t *testing.T) {
 func TestElapsedDays(t *testing.T) {
 	day1 := parseTime("01/01/2000")
 	day2 := parseTime("02/01/2000")
+	day3 := parseTime("05/01/2000")
 	dur := elapsedDays(day1, day2)
-	t.Error(dur)
+	dur2 := elapsedDays(day1, day3)
+	dur3 := elapsedDays(day3, day2)
+	if dur != 1 {
+		t.Error("Exptected <1>, got: ", dur)
+	}
+	if dur2 != 4 {
+		t.Error("Exptected <4>, got: ", dur2)
+	}
+	if dur3 != -3 {
+		t.Error("Expected <-3>, got: ", dur3)
+	}
 }
