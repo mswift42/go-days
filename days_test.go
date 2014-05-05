@@ -108,3 +108,25 @@ func TestElapsedDays(t *testing.T) {
 		t.Error("Expected <-3>, got: ", dur3)
 	}
 }
+
+func TestAddDay(t *testing.T) {
+	startday := parseTime("01/01/2000")
+	fday := formatDate(addDay(startday, 1))
+	if fday != "02/01/2000" {
+		t.Error("Expected <02/01/2000>, got: ", fday)
+	}
+}
+
+func TestWeekDates(t *testing.T) {
+	startday := "01/01/2000"
+	week := weekDates(startday)
+	sndday := week[1]
+	if sndday.Day() != 2 {
+		t.Error("Expected <2>, got: ", sndday.Day())
+	}
+	thirddate := week[2]
+	thirddatemonth := thirddate.Month()
+	if thirddatemonth != time.January {
+		t.Error("Expected <January>, got: ", thirddatemonth)
+	}
+}
