@@ -56,6 +56,8 @@ func weekDates(s string) []time.Time {
 	return week
 }
 
+// addDay - add to a given starting day, a number of days
+// and return the resulting date.
 func addDay(startday time.Time, day int64) time.Time {
 	return startday.Add(time.Duration(time.Hour * 24))
 }
