@@ -37,6 +37,11 @@ func formatDate(t time.Time) string {
 	return t.Format(layout)
 }
 
+func formatDateFancy(t time.Time) string {
+	layout := "Monday, 02 Jan 2006"
+	return t.Format(layout)
+}
+
 // elapsedDays - return elapsed days between
 // two dates.
 func elapsedDays(day1, day2 time.Time) int64 {
@@ -59,7 +64,8 @@ func weekDates(s string) []time.Time {
 // addDay - add to a given starting day, a number of days
 // and return the resulting date.
 func addDay(startday time.Time, day int64) time.Time {
-	return startday.Add(time.Duration(time.Hour * 24))
+	length := 24 * day
+	return startday.Add(time.Duration(length) * time.Hour)
 }
 
 // withLayout - take a template name and a templatefile
@@ -96,8 +102,15 @@ func home(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+
+	weekdates := weekDates(formatDate(time.Now()))
+	weekdatesstring := make([]string, 7)
+	for ind, i := range weekdates {
+		weekdatesstring[ind] = formatDateFancy(i)
+
+	}
 	if err := withLayout("home", "templates/home.tmpl").Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
-		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn, "Logout": url}); err != nil {
+		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn, "Logout": url, "Week": weekdatesstring}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

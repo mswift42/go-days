@@ -129,4 +129,9 @@ func TestWeekDates(t *testing.T) {
 	if thirddatemonth != time.January {
 		t.Error("Expected <January>, got: ", thirddatemonth)
 	}
+	fourthdate := week[3]
+	formateddate := formatDate(fourthdate)
+	if formateddate != "04/01/2000" {
+		t.Error("Expected <04/01/2000>, got: ", formateddate)
+	}
 }
