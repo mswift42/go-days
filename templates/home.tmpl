@@ -1,6 +1,16 @@
 {{define "home"}}
 {{template "base" .}}
-<div class="container">
+<div class="col-lg-3">
+  <div class="agenda">
+  <h2>Agenda</h2>
+  {{range .Week}}
+    <p>{{.}}</p>
+
+    {{end}}
+    </div>
+    </div>
+
+<div class="col-lg-9">
   <h2 class="header">Tasks</h2>
   <br/>
   <br/>
@@ -27,6 +37,14 @@
   </div>
   <br/>
   {{end}}
+   
+
+
+    <script>$(function(){$('.sidebar').affix();});
+    </script>
+  <!-- <aside> -->
+  <!--   <p>or maybe use aside</p> -->
+  <!-- </aside> -->
 </div>
 {{end}}
 
