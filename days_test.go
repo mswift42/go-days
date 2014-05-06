@@ -118,7 +118,7 @@ func TestAddDay(t *testing.T) {
 }
 
 func TestWeekDates(t *testing.T) {
-	startday := "01/01/2000"
+	startday := parseTime("01/01/2000")
 	week := weekDates(startday)
 	sndday := week[1]
 	if sndday.Day() != 2 {
