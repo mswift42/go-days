@@ -50,13 +50,12 @@ func elapsedDays(day1, day2 time.Time) int64 {
 	return (dur1 - dur2) / 24
 }
 
-// weekDates - takes a datestring in format dd/mm/yyyy
-// and returns a slice of dates of range startday - 1 week from startday.
-func weekDates(s string) []time.Time {
-	startday := parseTime(s)
-	week := make([]time.Time, 7)
-	for i := int64(0); i < 7; i++ {
-		week[i] = addDay(startday, i)
+// weekDates - takes a day
+// and returns a slice of dates of range startday - 10 days from startday.
+func weekDates(day time.Time) []time.Time {
+	week := make([]time.Time, 10)
+	for i := int64(0); i < 10; i++ {
+		week[i] = addDay(day, i)
 	}
 	return week
 }
@@ -103,8 +102,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	weekdates := weekDates(formatDate(time.Now()))
-	weekdatesstring := make([]string, 7)
+	weekdates := weekDates(time.Now())
+	weekdatesstring := make([]string, 10)
 	for ind, i := range weekdates {
 		weekdatesstring[ind] = formatDateFancy(i)
 
