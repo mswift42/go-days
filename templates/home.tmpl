@@ -2,11 +2,13 @@
 {{template "base" .}}
 <div class="col-lg-3">
   <div class="agenda">
-  <h2>Agenda</h2>
-  {{range .Week}}
-    <p>{{.}}</p>
-
+    <h3>Agenda</h3>
+    <br/>
+    <br/>
+         {{range .Week}}
+   <p>{{.}}</p>
     {{end}}
+       </table>
     </div>
     </div>
 
@@ -41,7 +43,8 @@
    
 
 
-    <script>$(function(){$('.sidebar').affix();});
+  <script>$(function(){$('.sidebar').affix();
+    $("todostatus").css("background-color","green");});
     </script>
   <!-- <aside> -->
   <!--   <p>or maybe use aside</p> -->
