@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"html/template"
 	"net/http"
+	"strings"
 	"time"
 
 	"appengine"
@@ -169,7 +170,7 @@ func storetask(w http.ResponseWriter, r *http.Request) {
 	t := Task{User: fmt.Sprintf("%s", user),
 		Summary:    r.FormValue("tinput"),
 		Content:    r.FormValue("tarea"),
-		Scheduled:  r.FormValue("scheduled"),
+		Scheduled:  strings.TrimRight(r.FormValue("scheduled"), "/"),
 		Done:       "Todo",
 		Identifier: fmt.Sprintf("%d", time.Now().Unix())}
 	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
