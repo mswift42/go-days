@@ -176,7 +176,7 @@ func TestAgendaOverview(t *testing.T) {
 	if a1 != "Saturday, 10 May 2014" {
 		t.Error("Expected <Saturday, 10 May 2014>, got: ", a1)
 	}
-	a2 := a[3].Task.Scheduled
+	a2 := a[3].Taskslice[0].Scheduled
 	if a2 != "13/05/2014" {
 		t.Error("Expected <13/05/2014>, got: ", a2)
 	}
