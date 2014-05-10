@@ -8,7 +8,8 @@
     {{range .Agenda}}
     <p>{{ .FancyDate}}</p>
     {{range .Taskslice}}
-    <p>{{.Summary}}</p>
+    <a href=#{{.Identifier}}>{{.Summary}}</a>
+
     {{end}}
     {{end}}
        </table>
@@ -24,7 +25,7 @@
   </div>
   {{range .tasks}}
   <div class="content">
-    <h4 class="header">{{ .Summary}}</h4>
+    <h4 id={{.Identifier}} class="header">{{ .Summary}}</h4>
     <div class="taskinline">
       <div class="well well-lg">
         <p class="todostatus">{{.Done}}</p>
