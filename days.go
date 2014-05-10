@@ -26,7 +26,7 @@ type Task struct {
 
 type Agenda struct {
 	FancyDate string
-	Task
+	Taskslice []Task
 }
 
 // parseTime - convert a time string with layout
@@ -95,13 +95,17 @@ func mapAgenda(ts []Task) map[string]string {
 func agendaOverview(ts []Task, d time.Time) []Agenda {
 	week := weekDates(d)
 	a := make([]Agenda, 10)
-	for i := 0; i < 10; i++ {
-		for _, j := range ts {
-			a[i].FancyDate = formatDateFancy(week[i])
-			if formatDate(week[i]) == j.Scheduled {
-				a[i].Task = j
+	for i, j := range week {
+		a[i].FancyDate = formatDateFancy(j)
+	}
+	for i := range a {
+		ag := make([]Task, 0)
+		for _, k := range ts {
+			if formatDate(week[i]) == k.Scheduled {
+				ag = append(ag, k)
 			}
 		}
+		a[i].Taskslice = ag
 	}
 	return a
 }
