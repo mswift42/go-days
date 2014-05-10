@@ -5,8 +5,11 @@
     <h3>Agenda</h3>
     <br/>
     <br/>
-         {{range .Week}}
-   <p>{{.}}</p>
+    {{range .Agenda}}
+    <p>{{ .FancyDate}}</p>
+    {{range .Taskslice}}
+    <p>{{.Summary}}</p>
+    {{end}}
     {{end}}
        </table>
     </div>
