@@ -1,13 +1,14 @@
 package days
 
 import (
-	"appengine"
-	"appengine/datastore"
-	"appengine/user"
 	"fmt"
 	"html/template"
 	"net/http"
 	"time"
+
+	"appengine"
+	"appengine/datastore"
+	"appengine/user"
 )
 
 // Task - struct for datastore table.
@@ -20,6 +21,11 @@ type Task struct {
 	Scheduled  string
 	Done       string
 	Identifier string
+}
+
+type Agenda struct {
+	FancyDate string
+	Task
 }
 
 // parseTime - convert a time string with layout
@@ -57,6 +63,7 @@ func weekDates(day time.Time) []time.Time {
 	for i := int64(0); i < 10; i++ {
 		week[i] = addDay(day, i)
 	}
+
 	return week
 }
 
@@ -65,6 +72,37 @@ func weekDates(day time.Time) []time.Time {
 func addDay(startday time.Time, day int64) time.Time {
 	length := 24 * day
 	return startday.Add(time.Duration(length) * time.Hour)
+}
+
+func mapAgenda(ts []Task) map[string]string {
+	week := weekDates(time.Now())
+	m := make(map[string]string)
+	for _, i := range week {
+		m[formatDateFancy(i)] = ""
+
+	}
+	for _, i := range week {
+		for _, j := range ts {
+			if formatDate(i) == j.Scheduled {
+				m[formatDateFancy(i)] = j.Scheduled
+			}
+		}
+	}
+	return m
+}
+
+func agendaOverview(ts []Task, d time.Time) []Agenda {
+	week := weekDates(d)
+	a := make([]Agenda, 10)
+	for i := 0; i < 10; i++ {
+		for _, j := range ts {
+			a[i].FancyDate = formatDateFancy(week[i])
+			if formatDate(week[i]) == j.Scheduled {
+				a[i].Task = j
+			}
+		}
+	}
+	return a
 }
 
 // withLayout - take a template name and a templatefile
@@ -95,7 +133,8 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	url, _ := user.LogoutURL(c, "/signout")
-	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Filter("User =", fmt.Sprintf("%s", u)).Order("Scheduled").Limit(10)
+	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Filter("User =",
+		fmt.Sprintf("%s", u)).Order("Scheduled").Limit(10)
 	tasks := make([]Task, 0, 10)
 	if _, err := q.GetAll(c, &tasks); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -106,10 +145,11 @@ func home(w http.ResponseWriter, r *http.Request) {
 	weekdatesstring := make([]string, 10)
 	for ind, i := range weekdates {
 		weekdatesstring[ind] = formatDateFancy(i)
-
 	}
+	ag := agendaOverview(tasks, time.Now())
+
 	if err := withLayout("home", "templates/home.tmpl").Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
-		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn, "Logout": url, "Week": weekdatesstring}); err != nil {
+		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn, "Logout": url, "Week": weekdatesstring, "Agenda": ag}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
