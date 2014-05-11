@@ -29,6 +29,11 @@ type Agenda struct {
 	Taskslice []Task
 }
 
+// agendasize constant, describes size of agendaoverview in days
+const (
+	agendasize int64 = 10
+)
+
 // parseTime - convert a time string with layout
 // dd/mm/yyyy to time.Time type.
 func parseTime(s string) time.Time {
@@ -60,8 +65,8 @@ func elapsedDays(day1, day2 time.Time) int64 {
 // weekDates - takes a day
 // and returns a slice of dates of range startday - 10 days from startday.
 func weekDates(day time.Time) []time.Time {
-	week := make([]time.Time, 10)
-	for i := int64(0); i < 10; i++ {
+	week := make([]time.Time, agendasize)
+	for i := int64(0); i < agendasize; i++ {
 		week[i] = addDay(day, i)
 	}
 
@@ -75,26 +80,11 @@ func addDay(startday time.Time, day int64) time.Time {
 	return startday.Add(time.Duration(length) * time.Hour)
 }
 
-func mapAgenda(ts []Task) map[string]string {
-	week := weekDates(time.Now())
-	m := make(map[string]string)
-	for _, i := range week {
-		m[formatDateFancy(i)] = ""
-
-	}
-	for _, i := range week {
-		for _, j := range ts {
-			if formatDate(i) == j.Scheduled {
-				m[formatDateFancy(i)] = j.Scheduled
-			}
-		}
-	}
-	return m
-}
-
+// agendaOverview - takes a taskarray and a day
+// and returns
 func agendaOverview(ts []Task, d time.Time) []Agenda {
 	week := weekDates(d)
-	a := make([]Agenda, 10)
+	a := make([]Agenda, agendasize)
 	for i, j := range week {
 		a[i].FancyDate = formatDateFancy(j)
 	}
@@ -146,15 +136,15 @@ func home(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	weekdates := weekDates(time.Now())
-	weekdatesstring := make([]string, 10)
-	for ind, i := range weekdates {
-		weekdatesstring[ind] = formatDateFancy(i)
-	}
+	// weekdates := weekDates(time.Now())
+	// weekdatesstring := make([]string, 10)
+	// for ind, i := range weekdates {
+	// 	weekdatesstring[ind] = formatDateFancy(i)
+	// }
 	ag := agendaOverview(tasks, time.Now())
 
 	if err := withLayout("home", "templates/home.tmpl").Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
-		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn, "Logout": url, "Week": weekdatesstring, "Agenda": ag}); err != nil {
+		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn, "Logout": url, "Agenda": ag}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }
