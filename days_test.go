@@ -147,26 +147,6 @@ func TestFormatDateFancy(t *testing.T) {
 	}
 }
 
-func TestMapAgenda(t *testing.T) {
-	t1 := Task{Summary: "task1", Done: "Todo", Scheduled: "13/05/2014"}
-	t2 := Task{Summary: "task2", Done: "Done", Scheduled: "14/05/2014"}
-	tasks := []Task{t1, t2}
-	m := mapAgenda(tasks)
-	ag1 := m["Wednesday, 14 May 2014"]
-	ag2 := m["Thursday, 15 May 2014"]
-	ag3 := m["Tuesday, 13 May 2014"]
-	if ag1 != "14/05/2014" {
-		t.Error("Exptected<14/04/2014>, got: ", ag1)
-	}
-	if ag2 != "" {
-		t.Error("Exptected < >, got: ", ag2)
-	}
-	if ag3 != "13/05/2014" {
-		t.Error("Expected <13/05/2014>, got: ", ag3)
-	}
-
-}
-
 func TestAgendaOverview(t *testing.T) {
 	t1 := Task{Summary: "task1", Done: "Todo", Scheduled: "13/05/2014"}
 	t2 := Task{Summary: "task2", Done: "Done", Scheduled: "14/05/2014"}
