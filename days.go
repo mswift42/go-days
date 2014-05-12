@@ -203,6 +203,7 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	id := r.FormValue("taskid")
 	scheduled := r.FormValue("scheduled")
+	summary := r.FormValue("tinput")
 	content := r.FormValue("tarea")
 	done := r.FormValue("Done")
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
@@ -214,6 +215,7 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	if btn := r.FormValue("taskidbutton"); btn == "delete" {
 		datastore.Delete(c, key[0])
 	} else {
+		edittask[0].Summary = summary
 		edittask[0].Scheduled = scheduled
 		edittask[0].Content = content
 		edittask[0].Done = done

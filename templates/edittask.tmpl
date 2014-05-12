@@ -12,6 +12,13 @@
           <h3 class="tsummary">{{.Summary}}</h3>
         </div>
         <div class="control-group">
+                  <label class="control-label" for="textinput">Edit Task Summary</label>
+          <div class="controls">
+            <input id="textinput" name="tinput" class="form-control input-md" type="text" value={{.Summary}}>
+          </div>
+          </div>
+
+        <div class="control-group">
           <label class="control-label" for="tarea">Edit Task Contents</label>
           <div class="col-sm20">
             <textarea class="form-control" name="tarea" rows="5">{{.Content}}</textarea>
@@ -40,8 +47,8 @@
         <input type="hidden" value={{.Identifier}} name="taskid" />
         <div class="control-group">
           <div class="controls">
-            <button class="btn" id="singlebutton"name="taskidbutton" value="save">save</button>
-            <button class="btn" id="singlebutton"name="taskidbutton" value="delete">delete</button>
+            <button class="btn btn-primary" id="singlebutton"name="taskidbutton" value="save">save</button>
+            <button class="btn btn-danger" id="singlebutton"name="taskidbutton" value="delete">delete</button>
           </div>
         </div>
       </div>
