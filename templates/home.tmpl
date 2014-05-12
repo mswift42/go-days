@@ -6,10 +6,13 @@
     <br/>
     <br/>
     {{range .Agenda}}
-    <p>{{ .FancyDate}}</p>
+    <div class="fancydate">
+      <p>{{ .FancyDate}}</p>
+      </div>
     {{range .Taskslice}}
+    <div class="singletask">
     <a href=#{{.Identifier}}>{{.Summary}}</a>
-
+    </div>
     {{end}}
     {{end}}
        </table>
