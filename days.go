@@ -81,7 +81,10 @@ func addDay(startday time.Time, day int64) time.Time {
 }
 
 // agendaOverview - takes a taskarray and a day
-// and returns
+// and builds an overview of all coming dates in range of today -
+// agendasize. For every day it builds a struct agenda with a
+// formatted date and a slice of tasks, due at that date and with
+// status "Todo". Finally the array of 'Agendastructs is returned.
 func agendaOverview(ts []Task, d time.Time) []Agenda {
 	week := weekDates(d)
 	a := make([]Agenda, agendasize)
@@ -91,7 +94,7 @@ func agendaOverview(ts []Task, d time.Time) []Agenda {
 	for i := range a {
 		ag := make([]Task, 0)
 		for _, k := range ts {
-			if formatDate(week[i]) == k.Scheduled {
+			if formatDate(week[i]) == k.Scheduled && k.Done == "Todo" {
 				ag = append(ag, k)
 			}
 		}
