@@ -151,3 +151,7 @@ pre {
 #deletebutton {
     margin-left:35rem;
 }
+h3 > span {
+    text-decoration:line-through;
+    padding:6px;
+}
