@@ -33,14 +33,14 @@
       <div class="well well-lg">
         <p class="todostatus">{{.Done}}</p>
         <pre>{{.Content}}</pre>
-
-        <p>{{.Scheduled}}
+        
+        <p>Scheduled: {{.Scheduled}}
         </p>
       </div>
       <form action="/edittask" method="post">
         <input type="hidden" value={{.Identifier}} name="taskid" />
         <div class="taskinline">
-          <input type="submit"  value="Edit Task" class="btn"/>
+          <input type="submit"  value="Edit Task" class="btn btn-primary"/>
         </div>
       </form>
     </div>

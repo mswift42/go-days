@@ -1,6 +1,6 @@
 body {
     padding-top: 70px;
-    background-color:#ffffd5;
+    background-color:#efece3;
 }
 
 div.container {
@@ -53,12 +53,12 @@ div.control-group {
 /* } */
 
 .navbar-inner {
- background-image: -moz-linear-gradient(top, #ecece8, #f5f5df);
-  background-image: -ms-linear-gradient(top, #ecece8, #f5f5df);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#ecece8), to(#f5f5df));
-  background-image: -webkit-linear-gradient(top, #ecece8, #f5f5df);
-  background-image: -o-linear-gradient(top, #ecece8, #f5f5df);
-  background-image: linear-gradient(top, #ecece8, #f5f5df);
+ background-image: -moz-linear-gradient(top, #edebe5, #f2eee0);
+  background-image: -ms-linear-gradient(top, #edebe5, #f2eee0);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#edebe5), to(#f2eee0));
+  background-image: -webkit-linear-gradient(top, #edebe5, #f2eee0);
+  background-image: -o-linear-gradient(top, #edebe5, #f2eee0);
+  background-image: linear-gradient(top, #edebe5, #f2eee0);
   background-repeat: repeat-x;
 }
 .nav navbar-nav {
@@ -130,22 +130,21 @@ div.bannerheader {
 }
 div.fancydate {
     margin-top:4px;
-    box-shadow:0px 0.2px 0.2px 0px rgb(0,0,0);
 }
 div.singletask {
     margin-bottom:2px;
 }
 .well {
-    background-color:#ffffd5;
+    background-color:#efece3;
     border:0px;
 }
 
 pre {
-    background-color:#ffffd5;
+    background-color:#efece3;
     color:rgb(0,0,0);
 }
-.active > a {
-    color:#0c1468;
+.nav>li>a:hover{
+    background-color:#cfcabe;
 }
 
 #deletebutton {
@@ -154,4 +153,7 @@ pre {
 h3 > span {
     text-decoration:line-through;
     padding:6px;
+}
+div.taskinline > input {
+    margin-left:1.5rem;
 }
