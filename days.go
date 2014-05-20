@@ -135,7 +135,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 	url, _ := user.LogoutURL(c, "/signout")
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Filter("User =",
-		fmt.Sprintf("%s", u)).Order("Scheduled").Limit(30)
+		fmt.Sprintf("%s", u)).Order("-Done").Order("Scheduled").Limit(30)
 	tasks := make([]Task, 0, 30)
 	if _, err := q.GetAll(c, &tasks); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)

@@ -149,8 +149,9 @@ func TestFormatDateFancy(t *testing.T) {
 
 func TestAgendaOverview(t *testing.T) {
 	t1 := Task{Summary: "task1", Done: "Todo", Scheduled: "13/05/2014"}
-	t2 := Task{Summary: "task2", Done: "Done", Scheduled: "14/05/2014"}
-	tasks := []Task{t1, t2}
+	t2 := Task{Summary: "task2", Done: "Todo", Scheduled: "14/05/2014"}
+	t3 := Task{Summary: "task3", Done: "Done", Scheduled: "15/05/2014"}
+	tasks := []Task{t1, t2, t3}
 	a := agendaOverview(tasks, parseTime("10/05/2014"))
 	a1 := a[0].FancyDate
 	if a1 != "Saturday, 10 May 2014" {

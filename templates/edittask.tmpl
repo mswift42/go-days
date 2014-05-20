@@ -2,22 +2,18 @@
 {{template "base" .}}
 <div class="container">
   <h2 class="header">Edit Tasks</h2>
-
-
   <form class="form-horizontal" action="/updatetask" method="post">
     <fieldset>
-
       <div class="content">
         <div class="control-group">
           <h3 class="tsummary">{{.Summary}}</h3>
         </div>
         <div class="control-group">
-                  <label class="control-label" for="textinput">Edit Task Summary</label>
+          <label class="control-label" for="textinput">Edit Task Summary</label>
           <div class="controls">
             <input id="textinput" name="tinput" class="form-control input-md" type="text" value={{.Summary}}>
           </div>
-          </div>
-
+        </div>
         <div class="control-group">
           <label class="control-label" for="tarea">Edit Task Contents</label>
           <div class="col-sm20">
@@ -29,19 +25,15 @@
           <div class="controls">
             <input type="text" class="datepicker" value={{.Scheduled}} name="scheduled" />
           </div>
-
           <div class="radio">
+            <input type="radio" name="Done" id="optionsRadios1" value="Todo"{{.Check1 | html}}>
+            Todo
+          </div>
+          <div class="radio">
+            <input type="radio" name="Done" id="optionsRadios2" value="Done"{{.Check2 | html}}>
+            Done
 
-    <input type="radio" name="Done" id="optionsRadios1" value="Todo"{{.Check1 | html}}>
-    Todo
-
-</div>
-<div class="radio">
-
-    <input type="radio" name="Done" id="optionsRadios2" value="Done"{{.Check2 | html}}>
-    Done
-
-</div>
+          </div>
 
         </div>
         <input type="hidden" value={{.Identifier}} name="taskid" />
