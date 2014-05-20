@@ -29,15 +29,15 @@
     <div class="task">
     <p class="todostatus">{{.Done}}</p>
     <h4 id={{.Identifier}} class="header">{{ .Summary}}</h4>
-    <div class="taskinline">
-      <div class="content">
+    <!-- <div class="taskinline"> -->
+    <!--   <div class="content"> -->
 
-        <pre>{{.Content}}</pre>
+        <pre class="taskcontent">{{.Content}}</pre>
 
         <p>Scheduled: {{.Scheduled}}
         </p>
-      </div>
-      </div>
+      <!-- </div> -->
+      <!-- </div> -->
       <form action="/edittask" method="post">
         <input type="hidden" value={{.Identifier}} name="taskid" />
         <div class="taskinline">
@@ -51,7 +51,8 @@
   <script>var todo = $(".task .todostatus");
     $.each(todo,function(index,value) {
     if (value.innerHTML == "Done") {
-    $(value).parent().css("color","#999999");}});
+    $(value).parent().css("color","#777777");
+    $(value).parent().find("pre").css("color","#777777");}});
   </script>
   <!-- <aside> -->
   <!--   <p>or maybe use aside</p> -->

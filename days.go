@@ -24,6 +24,9 @@ type Task struct {
 	Identifier string
 }
 
+// Agenda - struct for Overview of upcoming tasks.
+// Contains a date in format <Weekday, day, monthabbr year>
+// and a slice of tasks for the date.
 type Agenda struct {
 	FancyDate string
 	Taskslice []Task
@@ -132,20 +135,13 @@ func home(w http.ResponseWriter, r *http.Request) {
 	}
 	url, _ := user.LogoutURL(c, "/signout")
 	q := datastore.NewQuery("Task").Ancestor(tasklistkey(c)).Filter("User =",
-		fmt.Sprintf("%s", u)).Order("Scheduled").Limit(10)
-	tasks := make([]Task, 0, 10)
+		fmt.Sprintf("%s", u)).Order("Scheduled").Limit(30)
+	tasks := make([]Task, 0, 30)
 	if _, err := q.GetAll(c, &tasks); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-
-	// weekdates := weekDates(time.Now())
-	// weekdatesstring := make([]string, 10)
-	// for ind, i := range weekdates {
-	// 	weekdatesstring[ind] = formatDateFancy(i)
-	// }
 	ag := agendaOverview(tasks, time.Now())
-
 	if err := withLayout("home", "templates/home.tmpl").Execute(w, map[string]interface{}{"Pagetitle": "Tasks",
 		"tasks": tasks, "User": u, "NotSignedIn": NotSignedIn, "Logout": url, "Agenda": ag}); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -154,6 +150,7 @@ func home(w http.ResponseWriter, r *http.Request) {
 func newtask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
+
 	if err := withLayout("newtask", "templates/newtask.tmpl").Execute(w,
 		map[string]interface{}{"Pagetitle": "New Task", "User": u,
 			"Today": formatDate(time.Now())}); err != nil {
@@ -164,13 +161,13 @@ func newtask(w http.ResponseWriter, r *http.Request) {
 func storetask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	user := user.Current(c)
+	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
 	t := Task{User: fmt.Sprintf("%s", user),
 		Summary:    r.FormValue("tinput"),
 		Content:    r.FormValue("tarea"),
 		Scheduled:  strings.TrimRight(r.FormValue("scheduled"), "/"),
 		Done:       "Todo",
 		Identifier: fmt.Sprintf("%d", time.Now().Unix())}
-	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
 	_, err := datastore.Put(c, key, &t)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -182,6 +179,7 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	u := user.Current(c)
 	id := r.FormValue("taskid")
+	url, _ := user.LogoutURL(c, "/signout")
 	var edittask []Task
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
 	q.GetAll(c, &edittask)
@@ -196,7 +194,7 @@ func edittask(w http.ResponseWriter, r *http.Request) {
 		map[string]interface{}{"Pagetitle": "Edit Tasks", "User": u,
 			"Summary": edittask[0].Summary, "Content": edittask[0].Content,
 			"Identifier": id, "Scheduled": edittask[0].Scheduled,
-			"Check1": check1, "Check2": check2})
+			"Check1": check1, "Check2": check2, "Logout": url})
 }
 
 func updatetask(w http.ResponseWriter, r *http.Request) {

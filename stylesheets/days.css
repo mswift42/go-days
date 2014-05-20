@@ -82,6 +82,9 @@ pre {
     color:rgb(0,0,0);
     border-radius:6px;
     border-color:#f5f3ee;
+    padding:8px;
+    margin-top:8px;
+    margin-bottom:8px;
 }
 
 #deletebutton {
