@@ -59,7 +59,7 @@ div.bannerheader {
 .todostatus {
     padding:1px;
     text-align:center;
-    color:rgb(255,80,80)
+    color:ff5050;
 }
 .col-lg-3 {
     line-height:1.4em;
@@ -79,7 +79,7 @@ div.singletask {
 
 pre {
     background-color:#f5f3ee;
-    color:rgb(0,0,0);
+    color:#000000;
     border-radius:6px;
     border-color:#f5f3ee;
     padding:8px;
