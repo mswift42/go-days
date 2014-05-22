@@ -14,3 +14,17 @@ indexes:
   ancestor: yes
   properties:
   - name: Scheduled
+
+- kind: Task
+  ancestor: yes
+  properties:
+  - name: User
+  - name: Done
+    direction: desc
+  - name: Scheduled
+
+- kind: Task
+  ancestor: yes
+  properties:
+  - name: User
+  - name: Scheduled
