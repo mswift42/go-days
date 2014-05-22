@@ -110,8 +110,12 @@ func TestElapsedDays(t *testing.T) {
 func TestAddDay(t *testing.T) {
 	startday := parseTime("01/01/2000")
 	fday := formatDate(addDay(startday, 1))
+	fday2 := formatDate(addDay(startday, -1))
 	if fday != "02/01/2000" {
 		t.Error("Expected <02/01/2000>, got: ", fday)
+	}
+	if fday2 != "31/12/1999" {
+		t.Error("Expected <31/12/1999>, got: ", fday2)
 	}
 }
 
@@ -119,18 +123,18 @@ func TestWeekDates(t *testing.T) {
 	startday := parseTime("01/01/2000")
 	week := weekDates(startday)
 	sndday := week[1]
-	if sndday.Day() != 2 {
-		t.Error("Expected <2>, got: ", sndday.Day())
+	if sndday.Day() != 30 {
+		t.Error("Expected <30>, got: ", sndday.Day())
 	}
 	thirddate := week[2]
 	thirddatemonth := thirddate.Month()
-	if thirddatemonth != time.January {
-		t.Error("Expected <January>, got: ", thirddatemonth)
+	if thirddatemonth != time.December {
+		t.Error("Expected <December>, got: ", thirddatemonth)
 	}
 	fourthdate := week[3]
 	formateddate := formatDate(fourthdate)
-	if formateddate != "04/01/2000" {
-		t.Error("Expected <04/01/2000>, got: ", formateddate)
+	if formateddate != "01/01/2000" {
+		t.Error("Expected <01/01/2000>, got: ", formateddate)
 	}
 }
 
@@ -152,7 +156,7 @@ func TestAgendaOverview(t *testing.T) {
 	t2 := Task{Summary: "task2", Done: "Todo", Scheduled: "14/05/2014"}
 	t3 := Task{Summary: "task3", Done: "Done", Scheduled: "15/05/2014"}
 	tasks := []Task{t1, t2, t3}
-	a := agendaOverview(tasks, parseTime("10/05/2014"))
+	a := agendaOverview(tasks, parseTime("13/05/2014"))
 	a1 := a[0].FancyDate
 	if a1 != "Saturday, 10 May 2014" {
 		t.Error("Expected <Saturday, 10 May 2014>, got: ", a1)

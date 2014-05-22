@@ -70,7 +70,7 @@ func elapsedDays(day1, day2 time.Time) int64 {
 func weekDates(day time.Time) []time.Time {
 	week := make([]time.Time, agendasize)
 	for i := int64(0); i < agendasize; i++ {
-		week[i] = addDay(day, i)
+		week[i] = addDay(day, i-3)
 	}
 
 	return week
