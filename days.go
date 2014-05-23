@@ -158,6 +158,7 @@ func newtask(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+// storetask - handler for POST - action on saving a new task.
 func storetask(w http.ResponseWriter, r *http.Request) {
 	c := appengine.NewContext(r)
 	user := user.Current(c)
