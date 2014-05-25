@@ -97,3 +97,10 @@ h3 > span {
 div.taskinline > input {
     margin-left:1.8rem;
 }
+.contmd {
+    /* text-align:center; */
+    padding:8px;
+    background-color:#f5f3ee;
+    margin-top:8px;
+
+}

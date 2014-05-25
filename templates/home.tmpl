@@ -32,8 +32,7 @@
     <!-- <div class="taskinline"> -->
     <!--   <div class="content"> -->
 
-        <pre class="taskcontent">{{.Content}}</pre>
-
+    <pre class="taskcontent">{{.Content}}</pre>
         <p>Scheduled: {{.Scheduled}}
         </p>
       <!-- </div> -->
@@ -48,15 +47,16 @@
   </div>
   <br/>
   {{end}}
-  <script>var todo = $(".task .todostatus");
-    $.each(todo,function(index,value) {
+  <script>var todo = $(".task .todostatus"); <!-- Mute "Done" Tasks by -->
+    $.each(todo,function(index,value) {      <!-- setting text-color to a lighter grey. -->
     if (value.innerHTML == "Done") {
     $(value).parent().css("color","#777777");
-    $(value).parent().find("pre").css("color","#777777");}});
+    $(value).parent().find("pre").css("color","#777777");}});                     
+    var taskpre = $(".taskcontent");
+    $.each(taskpre,function() {
+    var md = $(this).text();
+    $(this).replaceWith("<div class='contmd'"+md+"</div>");});
   </script>
-  <!-- <aside> -->
-  <!--   <p>or maybe use aside</p> -->
-  <!-- </aside> -->
 </div>
 {{end}}
 
