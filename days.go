@@ -7,6 +7,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/russross/blackfriday"
+
 	"appengine"
 	"appengine/datastore"
 	"appengine/user"
@@ -165,7 +167,7 @@ func storetask(w http.ResponseWriter, r *http.Request) {
 	key := datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
 	t := Task{User: fmt.Sprintf("%s", user),
 		Summary:    r.FormValue("tinput"),
-		Content:    r.FormValue("tarea"),
+		Content:    string(blackfriday.MarkdownCommon([]byte(r.FormValue("tarea")))),
 		Scheduled:  strings.TrimRight(r.FormValue("scheduled"), "/"),
 		Done:       "Todo",
 		Identifier: fmt.Sprintf("%d", time.Now().Unix())}
@@ -203,7 +205,7 @@ func updatetask(w http.ResponseWriter, r *http.Request) {
 	id := r.FormValue("taskid")
 	scheduled := r.FormValue("scheduled")
 	summary := r.FormValue("tinput")
-	content := r.FormValue("tarea")
+	content := string(blackfriday.MarkdownCommon([]byte(r.FormValue("tarea"))))
 	done := r.FormValue("Done")
 	q := datastore.NewQuery("Task").Filter("Identifier =", id)
 	var edittask []Task

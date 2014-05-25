@@ -5,6 +5,8 @@ import (
 	"testing"
 	"time"
 
+	"github.com/russross/blackfriday"
+
 	"appengine/aetest"
 	"appengine/datastore"
 	"appengine/user"
@@ -20,6 +22,12 @@ func TestTask(t *testing.T) {
 	}
 	if t1.Summary != "task1" {
 		t.Error("Exptected <task1>, got: ", t1.Summary)
+	}
+}
+func TestBlack(t *testing.T) {
+	output := blackfriday.MarkdownBasic([]byte("**Hallo**"))
+	if string(output) != "" {
+		t.Error("Expected <<b>pimmel</b>, got: ", string(output))
 	}
 }
 
