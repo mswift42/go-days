@@ -85,11 +85,11 @@ func addDay(startday time.Time, day int64) time.Time {
 	return startday.Add(time.Duration(length) * time.Hour)
 }
 
-// agendaOverview - takes a taskarray and a day
+// agendaOverview - takes a taskslice and a day
 // and builds an overview of all coming dates in range of today -
 // agendasize. For every day it builds a struct agenda with a
 // formatted date and a slice of tasks, due at that date and with
-// status "Todo". Finally the array of 'Agendastructs is returned.
+// status "Todo". Finally the slice of 'Agendastructs is returned.
 func agendaOverview(ts []Task, d time.Time) []Agenda {
 	week := weekDates(d)
 	a := make([]Agenda, agendasize)
@@ -117,6 +117,14 @@ func withLayout(name, templ string) *template.Template {
 func tasklistkey(c appengine.Context) *datastore.Key {
 	return datastore.NewKey(c, "Task", "default_tasklist", 0, nil)
 
+}
+
+func (t *Task) key(c appengine.Context) *datastore.Key {
+	if t.Id == 0 {
+		t.Created = time.Now()
+		return datastore.NewIncompleteKey(c, "Task", tasklistkey(c))
+	}
+	return datastore.NewKey(c, "Task", "", t.Id, tasklistkey(c))
 }
 
 func home(w http.ResponseWriter, r *http.Request) {
